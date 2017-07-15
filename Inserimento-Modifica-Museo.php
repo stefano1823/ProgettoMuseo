@@ -20,15 +20,6 @@
 	$thatsAll = 'Foto caricata con successo!';            // Messaggio di OK per upload corretto 
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 
-	$flag1 = false;
-	if(isset($_POST["userimage"])) {
-		if(in_array(array_pop(explode('.',$file)),$estensioni)) { 
-		// Controllo la dimensione del file... 
-			$flag1 = true;    
-		} else { 
-			print $wrongExt; 
-		}
-	}
 	 
 function doUpload($file, $upload_dir) { 
     global $thatsAll; 
@@ -66,7 +57,9 @@ function doUpload($file, $upload_dir) {
 		if(($codice_museo==null)||($nome==null)||($citta==null)||($indirizzo==null)||($orario_apertura==null)||($orario_chiusura==null)||($descrizione==null)){
 			$controllocampi="<p>Compilare tutti i campi</p>";
 		}else{
-			if($flag1 = true) {
+			$file = $_FILES['userimage']['name']; 
+			if(in_array(array_pop(explode('.',$file)),$estensioni)) { 
+			// Controllo la dimensione del file... 
 				$dimensione_file = $_FILES['userimage']['size']; 
 				if ($dimensione_file > $dimensione_max) { 
 					print $tooBig; 
@@ -76,7 +69,7 @@ function doUpload($file, $upload_dir) {
 					$percorso_img = "immagini/".$nome_immagine;
 					$immagine = "immagini/".$nome_immagine;
 				} 
-			}
+			} 
 			if($_SESSION["azione"]=="insert"&&$flag=="") {
 				$risultato= $dbConn->query("INSERT INTO elenco_musei(codice_museo,nome,citta,indirizzo,orario_apertura,orario_chiusura,descrizione,immagine_museo)
 								VALUES('$codice_museo','$nome','$citta','$indirizzo','$orario_apertura','$orario_chiusura','$descrizione','$percorso_img');");

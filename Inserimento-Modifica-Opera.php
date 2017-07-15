@@ -11,23 +11,17 @@
 	$esito="";
 	session_start();
 	$dimensione_max = '12600000';                         // Dimensione massima delle foto 
-	$upload_dir = './immagini';    // Cartella dove posizione le foto 
-	$estensioni = array ("png", "jpg", "gif");             // Tipi di File consentiti 
+	$upload_dir = './immagini';    							// Cartella dove posizione le foto 
+	$upload_dir1 = './audio'; 								// Cartella dove posizione l'audio
+	$estensioni = array ("png", "jpg", "gif"); 
+	$estensioni1 = array ("mp3","wav");	// Tipi di File consentiti 
 	$noSubmitSend = 'Nessun upload eseguito!';            // Messaggio di errore quando viene richiamato direttamente lo script PHP 
 	$wrongExt = 'Estensione file non valida!';            // Messaggio di errore per tipo di file non consentito 
 	$tooBig = 'Il file eccede la dimensione max!';        // Messaggio di errore per file troppo grande 
 	$thatsAll = 'Foto caricata con successo!';            // Messaggio di OK per upload corretto 
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
-	//*************************************** 
-	$flag1 = false;
-	if(isset($_POST["userimage"])) {
-		if(in_array(array_pop(explode('.',$file)),$estensioni)) { 
-		// Controllo la dimensione del file... 
-			$flag1 = true;    
-		} else { 
-			print $wrongExt; 
-		}
-	}
+	//*************************************** 	
+	
 	 
 	function doUpload($file, $upload_dir) { 
     global $thatsAll; 
@@ -50,6 +44,27 @@
 		$_SESSION["nome_img1"] = $newname;
     } else print $wrongUp; 
 } 
+	function doUpload1($file1, $upload_dir1) { 
+    global $thatsAll; 
+    $nomefile = $_FILES['useraudio']['tmp_name']; 
+    $nomereale = $_FILES['useraudio']['name']; 
+    $nomereale = htmlentities(strtolower($nomereale)); 
+    if (is_uploaded_file($nomefile)) { 
+        $newname = ($nomereale); 
+         
+        $ext = end(explode('.',$nomereale)); 
+        $filename = explode('.',$nomereale); 
+        if (file_exists($upload_dir1.'/'.$nomereale)) { 
+            $filename[0] .= '.'; 
+            for ($a=0;$a<=9;$a++) 
+                $filename[0] .= chr(rand(97,122)); 
+            $newname = $filename[0] . '.' . $ext; 
+        } 
+        $newname = str_replace(' ', '_', $newname); 
+        @move_uploaded_file($nomefile,($upload_dir1.'/'.$newname)); 
+		$_SESSION["nome_aud"] = $newname;
+    } else print $wrongUp; 
+}
 	$cm = $_SESSION["cm"];
 	if($_SESSION["azione"]=="update"){
 		$co_op = $_SESSION["co1"];
@@ -59,14 +74,16 @@
 		}
 		$row = $risultato1->fetch_assoc();
 		$codice_opera = $row['codice_opera']; $nome_opera = $row['nome_opera']; $desc = $row['breve_descrizione']; 
-		$descrizione_opera = $row['descrizione']; $nome_autore = $row['autore']; $per_sto = $row['periodo_storico'];
-		$tecnica = $row['tecnica']; $dimensione = $row['dimensioni'];$immagine = $row['immagine_museo'];
+		$descrizione_opera = $row['descrizione']; $luogo = $row['luogo']; $nome_autore = $row['autore']; $per_sto = $row['periodo_storico'];
+		$tecnica = $row['tecnica']; $dimensione = $row['dimensioni'];$immagine = $row['immagine_opera']; $audio = $row['audio'];
 	}
 	if(isset($crea_opera)){
-		if(($codice_opera==null)||($nome_opera==null)||($desc==null)||($descrizione_opera==null)||($nome_autore==null)||($per_sto==null)||($tecnica==null)||($dimensione==null)){
+		if(($codice_opera==null)||($nome_opera==null)||($desc==null)||($descrizione_opera==null)||($luogo==null)||($nome_autore==null)||($per_sto==null)||($tecnica==null)||($dimensione==null)){
 			$controllocampi="<p>Compilare tutti i campi</p>";
 		}else{
-			if($flag1 = true) {
+			$file = $_FILES['userimage']['name']; 
+			if(in_array(array_pop(explode('.',$file)),$estensioni)) { 
+			// Controllo la dimensione del file... 
 				$dimensione_file = $_FILES['userimage']['size']; 
 				if ($dimensione_file > $dimensione_max) { 
 					print $tooBig; 
@@ -76,18 +93,31 @@
 					$percorso_img = "immagini/".$nome_immagine;
 					$immagine = "immagini/".$nome_immagine;
 				} 
-			}
+			} 
+			$file1 = $_FILES['useraudio']['name']; 
+			if(in_array(array_pop(explode('.',$file1)),$estensioni1)) { 
+				// Controllo la dimensione del file... 
+				$dimensione_file1 = $_FILES['useraudio']['size']; 
+				if ($dimensione_file1 > $dimensione_max) { 
+					print $tooBig; 
+				} else { 
+					doUpload1($file1, $upload_dir1); 
+					$nome_audio = $_SESSION["nome_aud"];
+					$percorso_aud = "audio/".$nome_audio;
+					$audio = "audio/".$nome_audio;
+				} 				
+			} 
 			if($_SESSION["azione"]=="insert1"&&$flag=="") {
-				$risultato= $dbConn->query("INSERT INTO elenco_opere(codice_opera,nome_opera,breve_descrizione,descrizione,autore,periodo_storico,tecnica,dimensioni,immagine_opera,audio,codice_mus)
-								VALUES('$codice_opera','$nome_opera','$desc','$descrizione_opera','$nome_autore','$per_sto','$tecnica','$dimensione','$percorso_img','NULL','$cm');");
+				$risultato= $dbConn->query("INSERT INTO elenco_opere(codice_opera,nome_opera,breve_descrizione,descrizione,luogo,autore,periodo_storico,tecnica,dimensioni,immagine_opera,audio,codice_mus)
+							VALUES('$codice_opera','$nome_opera','$desc','$descrizione_opera','$luogo','$nome_autore','$per_sto','$tecnica','$dimensione','$percorso_img','$percorso_aud','$cm');");
 				if(!$risultato){
 					die("Impossibile eseguire la query: " . mysql_error());
 				}
 				$esito="<p>Modifiche salvate</p>";
 			} elseif($_SESSION["azione"]=="update") {
-				$codice_opera1 = $_POST['codice_opera']; $nome_opera1 = $_POST['nome_opera']; $descrizione1 = $_POST['desc']; $descrizione_opera1 = $_POST['descrizione_opera']; 
+				$codice_opera1 = $_POST['codice_opera']; $nome_opera1 = $_POST['nome_opera']; $descrizione1 = $_POST['desc']; $descrizione_opera1 = $_POST['descrizione_opera']; $luogo1 = $_POST['luogo'];
 				$nome_autore1 = $_POST['nome_autore']; $per_sto1 = $_POST['per_sto']; $tecnica1 = $_POST['tecnica']; $dimensione1 = $_POST['dimensione']; 
-				$risultato2= $dbConn->query("UPDATE elenco_opere SET codice_opera=$codice_opera1, nome_opera='$nome_opera1', breve_descrizione='$descrizione1', descrizione='$descrizione_opera1', autore = '$nome_autore1', periodo_storico = '$per_sto1',tecnica='$tecnica1',dimensioni='$dimensione1', immagine_opera='$immagine' WHERE codice_opera = '$codice_opera';");
+				$risultato2= $dbConn->query("UPDATE elenco_opere SET codice_opera=$codice_opera1, nome_opera='$nome_opera1', breve_descrizione='$descrizione1', descrizione='$descrizione_opera1', luogo = '$luogo1', autore = '$nome_autore1', periodo_storico = '$per_sto1',tecnica='$tecnica1',dimensioni='$dimensione1', immagine_opera='$immagine', audio = '$audio' WHERE codice_opera = '$codice_opera';");
 				if(!$risultato2){
 					die("Impossibile eseguire la query: " . mysql_error());
 				}
@@ -99,11 +129,11 @@
 			}
 			$row = $risultato1->fetch_assoc();
 			$codice_opera = $row['codice_opera']; $nome_opera = $row['nome_opera']; $desc = $row['breve_descrizione']; 
-			$descrizione_opera = $row['descrizione']; $nome_autore = $row['autore']; $per_sto = $row['periodo_storico'];
-			$tecnica = $row['tecnica']; $dimensione = $row['dimensioni'];$immagine = $row['immagine_museo'];
-		} 
+			$descrizione_opera = $row['descrizione']; $luogo = $row['luogo']; $nome_autore = $row['autore']; $per_sto = $row['periodo_storico'];
+			$tecnica = $row['tecnica']; $dimensione = $row['dimensioni'];$immagine = $row['immagine_opera']; $audio = $row['audio'];
+		}
 	} elseif(isset($annulla)){
-		$codice_opera = "";$nome_opera="";$desc="";$descrizione_opera="";$nome_autore="";$per_sto="";$tecnica="";$dimensioni="";
+		$codice_opera = "";$nome_opera="";$desc="";$descrizione_opera="";$luogo="";$nome_autore="";$per_sto="";$tecnica="";$dimensioni="";
 	} 
 	$dbConn->close();
 ?>
@@ -183,6 +213,10 @@ input.bottone:hover {
 </p>
 <textarea rows="10" cols="50" style= "margin-top: -3.5%" name="descrizione_opera" class="dati" ><?php
 					if($_SESSION["azione"]=="update") { print($descrizione_opera);}?></textarea>
+<p>Luogo
+  <input style="margin-left:12.2%" type="text" name="luogo" value="<?php
+					if($_SESSION["azione"]=="update") { print($nome_autore);}?>" maxlength=30 class="dati" />
+</p>
 <p>Autore
   <input style="margin-left:11.8%" type="text" name="nome_autore" value="<?php
 					if($_SESSION["azione"]=="update") { print($nome_autore);}?>" maxlength=30 class="dati" />
@@ -202,8 +236,10 @@ input.bottone:hover {
 <p>Immagine Museo
 <input style = "margin-left: 4%" name="userimage" type="file" /> 
 </p>
-<p>Audio</p>
+<p>Audio
+<input style = "margin-left: 12.5%" name="useraudio" type="file" /> 
+</p>
 <input type="button" value="TORNA ALL'ELENCO DEI MUSEI" name="torna_alla_home" class="bottone" style="margin-top: 5%; margin-left: 65%" onclick="document.location.href='Gestione-Opere.php'"/>
 </form>
 </body>
-</html>
+</html>
