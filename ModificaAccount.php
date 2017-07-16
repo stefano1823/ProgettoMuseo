@@ -1,72 +1,72 @@
 <?php
 	extract($_POST);
-	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
+	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
 	if (!$dbConn) {
-		echo "Impossibile connettersi al database!";
+		echo 'Impossibile connettersi al database!';
 		break;
 	}
-	$output="";
+	$output='';
 	$flag = false;
-	$esito = "";
-	$controllocampi="";
+	$esito = '';
+	$controllocampi='';
 	session_start();
 	
 	$risultato= $dbConn->query("SELECT id, username, password, email FROM users WHERE tipo = '0';");
 	if(!$risultato){
-		echo "Impossibile eseguire la query!";
+		echo 'Impossibile eseguire la query!';
 		break;
 	}
 	while(($row = $risultato->fetch_assoc()) != null){
-		$output.="<tr>";
+		$output.='<tr>';
 		$output.="<td> <input type=\"radio\" name=\"scelta\" value=\"$row[id]\"> </td>";
 		foreach ($row as $key => $value) {
 			$output.="<td class=\"dato\">$value</td>";
 		}
-		$output.="</tr>";
+		$output.='</tr>';
 	}
 	if(isset($elimina_account)) {
 		$codice_account=$scelta;
 		$risultato1= $dbConn->query("DELETE FROM users WHERE id = '$codice_account';");
 		if(!$risultato1){
-			echo "Impossibile eseguire la query!";
+			echo 'Impossibile eseguire la query!';
 			break;
 		}
-		$esito="<p>Account Eliminato</p>";
-		header("Location: ModificaAccount.php");
+		$esito='<p>Account Eliminato</p>';
+		header('Location: ModificaAccount.php');
 	} elseif(isset($modifica)) {
 		$flag = true;
 		$co_ac = $scelta;
-		$_SESSION["ca"]=$co_ac;
+		$_SESSION['ca']=$co_ac;
 		$risultato2= $dbConn->query("SELECT username, password, email FROM users WHERE id='$co_ac';");
 		if(!$risultato2){
-			echo "Impossibile eseguire la query!";
+			echo 'Impossibile eseguire la query!';
 			break;
 		}
 		$row1 = $risultato2->fetch_assoc();
 		$username = htmlspecialchars($row1['username']); $password = htmlspecialchars($row1['password']); $email = htmlspecialchars($row1['email']);
 	}
 	if(isset($modifica_account)) {
-		$ident = $_SESSION["ca"];
+		$ident = $_SESSION['ca'];
 			if(($username==null)||($password==null)||($email==null)){
-				$controllocampi="<p>Compilare tutti i campi</p>";
+				$controllocampi='<p>Compilare tutti i campi</p>';
 			} else {
 				$username1 = $_POST['username']; $password1 = $_POST['password']; $email1 = $_POST['email'];
 				$risultato3= $dbConn->query("UPDATE users SET username='$username1', password = '$password1', email = '$email1' WHERE id = '$ident';");
 				if(!$risultato3){
-					echo "Impossibile eseguire la query!";
+					echo 'Impossibile eseguire la query!';
 					break;
 				}
-				$esito="<p>Modifiche salvate</p>";
+				$esito='<p>Modifiche salvate</p>';
 				$risultato2= $dbConn->query("SELECT username, password, email FROM users WHERE id='$ident';");
 				if(!$risultato2){
-					echo "Impossibile eseguire la query!";
+					echo 'Impossibile eseguire la query!';
 					break;
 				}
 				$row1 = $risultato2->fetch_assoc();
 				$username = htmlspecialchars($row1['username']); $password = htmlspecialchars($row1['password']); $email = htmlspecialchars($row1['email']);
 			}
 	}elseif(isset($annulla)){
-		$username = "";$password="";$email="";
+		$username = '';$password='';$email='';
 	} 
 	$dbConn->close();
 ?>

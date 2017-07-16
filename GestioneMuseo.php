@@ -1,56 +1,56 @@
 <?php
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
-	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
+	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
 	if (!$dbConn) {
-		echo "Impossibile connettersi al database!";
+		echo 'Impossibile connettersi al database!';
 		break;
 	}
-	$dbConn->set_charset("utf8");
-	$output="";
-	$esitoOp = "";
+	$dbConn->set_charset('utf8');
+	$output='';
+	$esitoOp = '';
 	session_start();
 	
 	$risultato= $dbConn->query("SELECT codice_museo,nome,citta FROM elenco_musei;");
 	if(!$risultato){
-		echo "Impossibile eseguire la query!";
+		echo 'Impossibile eseguire la query!';
 		break;
 	}
 	while(($row = $risultato->fetch_assoc()) != null){
-		$output.="<tr>";
+		$output.='<tr>';
 		$output.="<td> <input type=\"radio\" name=\"scelta\" value=\"$row[codice_museo]\"> </td>";
 		foreach ($row as $key => $value) {
 			$output.="<td class=\"dato\">$value</td>";
 		}
-		$output.="</tr>";
+		$output.='</tr>';
 	}
 	if(isset($elenco_opere)) {
-		$_SESSION["cm"]=$scelta;
-		header("Location: Gestione-Opere.php");
+		$_SESSION['cm']=$scelta;
+		header('Location: Gestione-Opere.php');
 	}
 	if(isset($inserisci_museo)) {
-		$_SESSION["azione"]="insert";
-		$_SESSION["cm1"]=null;
-		header("Location: Inserimento-Modifica-Museo.php");
+		$_SESSION['azione']='insert';
+		$_SESSION['cm1']=null;
+		header('Location: Inserimento-Modifica-Museo.php');
 	}
 	elseif(isset($elimina_museo)) {
 		$codice_museo=$scelta;
 		$risultato2= $dbConn->query("DELETE FROM elenco_opere WHERE codice_mus = '$codice_museo';");
 		$risultato3= $dbConn->query("DELETE FROM elenco_musei WHERE codice_museo = '$codice_museo';");
 		if(!$risultato2){
-			echo "Impossibile eseguire la query!";
+			echo 'Impossibile eseguire la query!';
 			break;
 		}
 		if(!$risultato3){
-			echo "Impossibile eseguire la query!";
+			echo 'Impossibile eseguire la query!';
 			break;
 		}
-		$esitoOp="<h6>Museo eliminato</h6>";
-		header("Location: GestioneMuseo.php");
+		$esitoOp='<h6>Museo eliminato</h6>';
+		header('Location: GestioneMuseo.php');
 	} elseif(isset($modifica_museo)) {
-		$_SESSION["azione"]="update";
-		$_SESSION["cm1"]=$scelta;
-		header("Location: Inserimento-Modifica-Museo.php");
+		$_SESSION['azione']='update';
+		$_SESSION['cm1']=$scelta;
+		header('Location: Inserimento-Modifica-Museo.php');
 	}
 	$dbConn->close();
 ?>

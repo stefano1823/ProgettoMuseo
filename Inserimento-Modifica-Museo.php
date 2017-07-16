@@ -1,20 +1,20 @@
 <?php
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
-	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
+	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
 	if (!$dbConn) {
-		echo "Impossibile connettersi al database!";
+		echo 'Impossibile connettersi al database!';
 		break;
 	}
-	$dbConn->set_charset("utf8");
-	$flag="";
-	$controllocampi="";
-	$esito="";
+	$dbConn->set_charset('utf8');
+	$flag='';
+	$controllocampi='';
+	$esito='';
 	session_start();
 	//Impostazioni varie da modificare a piacimento 
 	$dimensione_max = '12600000';                         // Dimensione massima delle foto 
 	$upload_dir = './immagini';    // Cartella dove posizione le foto 
-	$estensioni = array ("png", "jpg", "gif");             // Tipi di File consentiti 
+	$estensioni = array ('png', 'jpg', 'gif');             // Tipi di File consentiti 
 	$noSubmitSend = 'Nessun upload eseguito!';            // Messaggio di errore quando viene richiamato direttamente lo script PHP 
 	$wrongExt = 'Estensione file non valida!';            // Messaggio di errore per tipo di file non consentito 
 	$tooBig = 'Il file eccede la dimensione max!';        // Messaggio di errore per file troppo grande 
@@ -39,14 +39,14 @@ function doUpload($upload_dir) {
         } 
         $newname = str_replace(' ', '_', $newname); 
         move_uploaded_file($nomefile,($upload_dir.'/'.$newname)); 
-		$_SESSION["nome_img"] = $newname;
+		$_SESSION['nome_img'] = $newname;
     } else print $wrongUp; 
 }  
-	if($_SESSION["azione"]=="update"){
-		$co_mu = $_SESSION["cm1"];
+	if($_SESSION['azione']=='update'){
+		$co_mu = $_SESSION['cm1'];
 		$risultato1= $dbConn->query("SELECT * FROM elenco_musei WHERE codice_museo='$co_mu';");
 		if(!$risultato1){
-			echo "Impossibile eseguire la query!";
+			echo 'Impossibile eseguire la query!';
 			break;
 		}
 		$row = $risultato1->fetch_assoc();
@@ -56,7 +56,7 @@ function doUpload($upload_dir) {
 	}
 	if(isset($crea_museo)){
 		if(($codice_museo==null)||($nome==null)||($citta==null)||($indirizzo==null)||($orario_apertura==null)||($orario_chiusura==null)||($descrizione==null)){
-			$controllocampi="<p>Compilare tutti i campi</p>";
+			$controllocampi='<p>Compilare tutti i campi</p>';
 		}else{
 			$file = $_FILES['userimage']['name']; 
 			if(in_array(array_pop(explode('.',$file)),$estensioni)) { 
@@ -66,32 +66,32 @@ function doUpload($upload_dir) {
 					print $tooBig; 
 				} else { 
 					doUpload($upload_dir); 
-					$nome_immagine = $_SESSION["nome_img"];
-					$percorso_img = "immagini/".$nome_immagine;
-					$immagine = "immagini/".$nome_immagine;
+					$nome_immagine = $_SESSION['nome_img'];
+					$percorso_img = 'immagini/'.$nome_immagine;
+					$immagine = 'immagini/'.$nome_immagine;
 				} 
 			} 
-			if($_SESSION["azione"]=="insert"&&$flag=="") {
+			if($_SESSION['azione']=='insert'&&$flag=='') {
 				$risultato= $dbConn->query("INSERT INTO elenco_musei(codice_museo,nome,citta,indirizzo,orario_apertura,orario_chiusura,descrizione,immagine_museo)
 								VALUES('$codice_museo','$nome','$citta','$indirizzo','$orario_apertura','$orario_chiusura','$descrizione','$percorso_img');");
 				if(!$risultato){
-					echo "Impossibile eseguire la query!";
+					echo 'Impossibile eseguire la query!';
 					break;
 				}
-				$esito="<p>Modifiche salvate</p>";
-			} elseif($_SESSION["azione"]=="update") {
+				$esito='<p>Modifiche salvate</p>';
+			} elseif($_SESSION['azione']=='update') {
 				$codice_museo1 = $_POST['codice_museo']; $nome1 = $_POST['nome']; $citta1 = $_POST['citta']; $indirizzo1 = $_POST['indirizzo']; $orario_apertura1 = $_POST['orario_apertura'];
 				$orario_chiusura1 = $_POST['orario_chiusura']; $descrizione1 = $_POST['descrizione'];
 				$risultato2= $dbConn->query("UPDATE elenco_musei SET codice_museo=$codice_museo1, nome='$nome1', citta = '$citta1', indirizzo = '$indirizzo1', orario_apertura = '$orario_apertura1', orario_chiusura = '$orario_chiusura1', descrizione = '$descrizione1', immagine_museo = '$immagine' WHERE codice_museo = '$codice_museo';");
 				if(!$risultato2){
-					echo "Impossibile eseguire la query!";
+					echo 'Impossibile eseguire la query!';
 					break;
 				}
-				$esito="<p>Modifiche salvate</p>";
+				$esito='<p>Modifiche salvate</p>';
 			}
 			$risultato1= $dbConn->query("SELECT * FROM elenco_musei WHERE codice_museo='$codice_museo';");
 			if(!$risultato1){
-				echo "Impossibile eseguire la query!";
+				echo 'Impossibile eseguire la query!';
 				break;
 			}
 			$row = $risultato1->fetch_assoc();
@@ -100,7 +100,7 @@ function doUpload($upload_dir) {
 			$descrizione = htmlspecialchars($row['descrizione']); $immagine = $row['immagine_museo'];
 		}  
 	} elseif(isset($annulla)){
-		$codice_museo = "";$nome="";$citta="";$indirizzo="";$oradio_apertura="";$oradio_chiusura="";$descrizione="";
+		$codice_museo = '';$nome='';$citta='';$indirizzo='';$oradio_apertura='';$oradio_chiusura='';$descrizione='';
 	} 
 	$dbConn->close();
 ?>
@@ -163,36 +163,36 @@ input.bottone:hover {
 <form enctype="multipart/form-data" action="Inserimento-Modifica-Museo.php" method="post">
 <p>Codice Museo
   <input style="margin-left:3%" type="text" name="codice_museo" value="<?php
-					if($_SESSION["azione"]=="update") { print($codice_museo);}?>" maxlength=4 class="dati" />
+					if($_SESSION['azione']=='update') { print($codice_museo);}?>" maxlength=4 class="dati" />
 </p>
 <p>Nome
   <input style="margin-left:9%" type="text" name="nome" value="<?php
-					if($_SESSION["azione"]=="update") { print($nome);}?>"maxlength=20 class="dati" />
+					if($_SESSION['azione']=='update') { print($nome);}?>"maxlength=20 class="dati" />
   <input type="submit" value="CREA/MODIFICA MUSEO" name="crea_museo" class="bottone" style="margin-left: 60%"/>
 </p>
 <p style="margin-top: -3%">Città
   <input style="margin-left:10%" type="text" name="citta" value="<?php
-					if($_SESSION["azione"]=="update") { print($citta); }?>" maxlength=20 class="dati" />
+					if($_SESSION['azione']=='update') { print($citta); }?>" maxlength=20 class="dati" />
 </p>
 <p>Indirizzo
   <input style="margin-left:7%" type="text" name="indirizzo" value="<?php
-					if($_SESSION["azione"]=="update") { print($indirizzo); }?>" maxlength=30 class="dati" />
+					if($_SESSION['azione']=='update') { print($indirizzo); }?>" maxlength=30 class="dati" />
 </p>
 <p style="margin-top: -1%">Orario Apertura
   <input style="margin-left: 1.5%" type="text" name="orario_apertura" value="<?php
-					if($_SESSION["azione"]=="update") { print($orario_apertura); }?>" class="dati" />
+					if($_SESSION['azione']=='update') { print($orario_apertura); }?>" class="dati" />
 <input type="submit" value="PULISCI CAMPI" name="annulla" class="bottone" style="margin-left: 30%"/>
 </p>
 <p style="margin-top: -2%">(hh:mm:ss)</p>
 <p>Orario Chiusura
   <input style="margin-left:1.5%" type="text" name="orario_chiusura" value="<?php
-					if($_SESSION["azione"]=="update") { print($orario_chiusura); }?>" class="dati" />
+					if($_SESSION['azione']=='update') { print($orario_chiusura); }?>" class="dati" />
 </p>
 <p style="margin-top: -2%">(hh:mm:ss)</p>
 <p style="margin-top: -1.5%">Descrizione
 </p>
 <textarea rows="10" cols="50" name="descrizione" class="dati"><?php
-					if($_SESSION["azione"]=="update") { print($descrizione); }?></textarea>
+					if($_SESSION['azione']=='update') { print($descrizione); }?></textarea>
 <p>Immagine Museo  
 <input style = "margin-left: 2%" name="userimage" type="file" />   
 </p>

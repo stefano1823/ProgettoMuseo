@@ -1,48 +1,48 @@
 <?php
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
-	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
+	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
 	if (!$dbConn) {
-		echo "Impossibile connettersi al database!";
+		echo 'Impossibile connettersi al database!';
 		break;
 	}
-	$dbConn->set_charset("utf8");
-	$output1="";
-	$esitoOp = "";
+	$dbConn->set_charset('utf8');
+	$output1='';
+	$esitoOp = '';
 	session_start();
 	
-	$cm = $_SESSION["cm"];
+	$cm = $_SESSION['cm'];
 	$risultato1= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione FROM elenco_opere WHERE codice_mus = '$cm';");
 	if(!$risultato1){
-		echo "Impossibile eseguire la query!";
+		echo 'Impossibile eseguire la query!';
 		break;
 	}
 	while(($row1 = $risultato1->fetch_assoc()) != null){
-		$output1.="<tr>";
+		$output1.='<tr>';
 		$output1.="<td> <input type=\"radio\" name=\"scelta1\" value=\"$row1[codice_opera]\"> </td>";
 		foreach ($row1 as $key1 => $value1) {
 			$output1.="<td class=\"dato\">$value1</td>";
 		}
-		$output1.="</tr>";
+		$output1.='</tr>';
 	}
 	if(isset($inserisci_opera)) {
-		$_SESSION["azione"]="insert1";
-		$_SESSION["co1"]=null;
-		header("Location: Inserimento-Modifica-Opera.php");
+		$_SESSION['azione']='insert1';
+		$_SESSION['co1']=null;
+		header('Location: Inserimento-Modifica-Opera.php');
 	}
 	elseif(isset($elimina_opera)) {
 		$codice_opera=$scelta1;
 		$risultato2= $dbConn->query("DELETE FROM elenco_opere WHERE codice_opera = '$codice_opera';");
 		if(!$risultato2){
-			echo "Impossibile eseguire la query!";
+			echo 'Impossibile eseguire la query!';
 			break;
 		}
-		$esitoOp="<p>Opera eliminata</p>";
-		header("Location: Gestione-Opere.php");
+		$esitoOp='<p>Opera eliminata</p>';
+		header('Location: Gestione-Opere.php');
 	} elseif(isset($modifica_opera)) {
-		$_SESSION["azione"]="update";
-		$_SESSION["co1"]=$scelta1;
-		header("Location: Inserimento-Modifica-Opera.php");
+		$_SESSION['azione']='update';
+		$_SESSION['co1']=$scelta1;
+		header('Location: Inserimento-Modifica-Opera.php');
 	}
 	$dbConn->close();
 ?>

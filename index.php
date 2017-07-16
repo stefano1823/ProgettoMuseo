@@ -1,14 +1,14 @@
 <?php 
 	extract($_POST);
-	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
+	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
 	if (!$dbConn) {
-		echo "Impossibile connettersi al database!";
+		echo 'Impossibile connettersi al database!';
 		break;
 	}
-	$output="";
+	$output='';
 	$risultato= $dbConn->query("SELECT nome FROM elenco_musei;");
 	if(!$risultato){
-		echo "Impossibile eseguire la query!";
+		echo 'Impossibile eseguire la query!';
 		break;
 	}
 	while(($row = $risultato->fetch_assoc()) != null){
@@ -19,8 +19,8 @@
 	session_start();
 	if(isset($invio)) {
 		$nome_museo = $_POST['COMBO'];
-		$_SESSION["museo_scelto"]=$nome_museo;
-		header("Location: FinestraUtente.php");
+		$_SESSION['museo_scelto']=$nome_museo;
+		header('Location: FinestraUtente.php');
 	}
 ?>
 <!DOCTYPE html>

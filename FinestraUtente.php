@@ -1,25 +1,25 @@
 <?php
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
-	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
+	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
 	if (!$dbConn) {
-		echo "Impossibile connettersi al database!";
+		echo 'Impossibile connettersi al database!';
 		break;
 	}
-	$dbConn->set_charset("utf8");
-	$output="";
+	$dbConn->set_charset('utf8');
+	$output='';
 	session_start();
-	$cm = $_SESSION["museo_scelto"];
+	$cm = $_SESSION['museo_scelto'];
 	$risultato2= $dbConn->query("SELECT codice_museo FROM elenco_musei WHERE nome = '$cm';");
 	$row = $risultato2->fetch_assoc();
 	$cod_mus = $row['codice_museo'];
 	$risultato= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione, immagine_opera FROM elenco_opere WHERE codice_mus = '$cod_mus';");
 	if(!$risultato){
-		echo "Impossibile eseguire la query!";
+		echo 'Impossibile eseguire la query!';
 		break;
 	}
 	while(($row = $risultato->fetch_assoc()) != null){
-		$output.="<tr>";
+		$output.='<tr>';
 		$output.="<td> <input type=\"radio\" name=\"scelta\" value=\"$row[codice_opera]\"> </td>";
 		$cont = 0;
 		foreach ($row as $key => $value) {
@@ -30,11 +30,11 @@
 				$output.= "<td><img src=$value WIDTH=\"450\" HEIGHT=\"400\" alt=\"ERRORE\" /></td>";
 			}
 		}
-		$output.="</tr>";
+		$output.='</tr>';
 	}
 	$risultato1= $dbConn->query("SELECT nome FROM elenco_musei WHERE codice_museo = '1200';");
 	if(!$risultato1){
-		echo "Impossibile eseguire la query!";
+		echo 'Impossibile eseguire la query!';
 		break;
 	}
 	$numero_righe = $risultato1->num_rows;
@@ -44,12 +44,12 @@
 		}
 	}
 	if($numero_righe > 1) {
-		print("Impossibile avere più musei con le stesse chiavi!");
+		print('Impossibile avere più musei con le stesse chiavi!');
 	} 
 	if(isset($vai_alla_scheda)) {
-		$_SESSION["azione"]="invio";
-		$_SESSION["co"]=$scelta;
-		header("Location: FinestraUtente1.php");
+		$_SESSION['azione']='invio';
+		$_SESSION['co']=$scelta;
+		header('Location: FinestraUtente1.php');
 	}
 	$dbConn->close();
 ?>

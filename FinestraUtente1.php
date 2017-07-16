@@ -2,18 +2,18 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
 	session_start();
-	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
+	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
 	if (!$dbConn) {
-		echo "Impossibile connettersi al database!";
+		echo 'Impossibile connettersi al database!';
 		break;
 	}
-	$dbConn->set_charset("utf8");
-	$output="";
-	if($_SESSION["azione"]=="invio") {
-		$co = $_SESSION["co"];
+	$dbConn->set_charset('utf8');
+	$output='';
+	if($_SESSION['azione']=='invio') {
+		$co = $_SESSION['co'];
 		$risultato= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione, descrizione, luogo, autore, periodo_storico, tecnica, dimensioni, immagine_opera, audio FROM elenco_opere WHERE codice_opera = '$co';");
 		if(!$risultato){
-			echo "Impossibile eseguire la query!";
+			echo 'Impossibile eseguire la query!';
 			break;
 		}
 	} 
@@ -65,7 +65,7 @@ div {
 <body>
 <form action="FinestraUtente1.php" method="post">
 <?php 
-if($_SESSION["azione"]=="invio") {  $row = $risultato->fetch_assoc(); $codice = htmlspecialchars($row['codice_opera']); $audio1 = htmlspecialchars($row['audio']); $immagine =htmlspecialchars($row['immagine_opera']); $output.="<h6 style=\"font-weight:bold; font-size: 30px; margin-left: 2%; margin-top: -2%\">"; $output.= $row['nome_opera']; $output.="</h6>";
+if($_SESSION['azione']=='invio"') {  $row = $risultato->fetch_assoc(); $codice = htmlspecialchars($row['codice_opera']); $audio1 = htmlspecialchars($row['audio']); $immagine =htmlspecialchars($row['immagine_opera']); $output.="<h6 style=\"font-weight:bold; font-size: 30px; margin-left: 2%; margin-top: -2%\">"; $output.= $row['nome_opera']; $output.="</h6>";
 $output.="<img src=$immagine WIDTH=\"500\" HEIGHT=\"450\" alt=\"ERRORE\" style=\"margin-top: -3%; margin-left: 2%\"/>";
 $output.= "<div style=\"margin-top: 1.5%\">LUOGO <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['luogo']); $output.= "</h6></div>"; 
 $output.= "<div style=\"margin-top: -3%\">AUTORE <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['autore']); $output.= "</h6></div>";  
