@@ -17,7 +17,7 @@ if(isset($_POST['register'])) {
 		$stringa4 ='Indirizzo email non valido.';
 		print($stringa4);
 	} elseif(strlen($email) > 60) {
-		$stringa5 = 'Lunghezza dell\'indirizzo email non valida. Massimo 60 caratteri.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		$stringa5 = "Lunghezza dell' indirizzo email non valida. Massimo 60 caratteri.<br /><br /><a href='javascript:history.back();'>Indietro</a>";
 		print($stringa5);
 	} elseif(mysql_num_rows(mysql_query("SELECT * FROM users WHERE username LIKE '$username'")) > 0) {
 		$stringa6 = 'Username già in uso. Sei pregato di sceglierne un altro.<br /><br /><a href="javascript:history.back();">Indietro</a>';

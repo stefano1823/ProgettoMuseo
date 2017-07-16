@@ -22,9 +22,9 @@ if(isset($_POST['login'])) {
 			$tipo = mysql_result(mysql_query("SELECT tipo FROM users WHERE username LIKE '$username'"), 0);
 			mysql_query("UPDATE users SET last_login='".time()."', last_ip='$ip' WHERE id='$userid'");
 			if ($tipo==0){
-				header("Location: GestioneMuseo.php");
+				header('Location: GestioneMuseo.php');
 			} elseif($tipo == 1) {
-				header("Location: Casella_amministratore.php");
+				header('Location: Casella_amministratore.php');
 			}
 		}
 	}
