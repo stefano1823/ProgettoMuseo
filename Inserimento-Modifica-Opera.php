@@ -41,7 +41,7 @@
             $newname = $filename[0] . '.' . $ext; 
         } 
         $newname = str_replace(' ', '_', $newname); 
-        @move_uploaded_file($nomefile,($upload_dir.'/'.$newname)); 
+        move_uploaded_file($nomefile,($upload_dir.'/'.$newname)); 
 		$_SESSION["nome_img1"] = $newname;
     } else print $wrongUp; 
 } 
@@ -62,7 +62,7 @@
             $newname = $filename[0] . '.' . $ext; 
         } 
         $newname = str_replace(' ', '_', $newname); 
-        @move_uploaded_file($nomefile,($upload_dir1.'/'.$newname)); 
+        move_uploaded_file($nomefile,($upload_dir1.'/'.$newname)); 
 		$_SESSION["nome_aud"] = $newname;
     } else print $wrongUp; 
 }

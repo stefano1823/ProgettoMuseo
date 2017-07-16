@@ -39,7 +39,7 @@ function doUpload($file, $upload_dir) {
             $newname = $filename[0] . '.' . $ext; 
         } 
         $newname = str_replace(' ', '_', $newname); 
-        @move_uploaded_file($nomefile,($upload_dir.'/'.$newname)); 
+        move_uploaded_file($nomefile,($upload_dir.'/'.$newname)); 
 		$_SESSION["nome_img"] = $newname;
     } else print $wrongUp; 
 }  
