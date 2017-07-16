@@ -5,25 +5,34 @@ if(isset($_POST['register'])) {
 	$password = isset($_POST['password']) ? clear($_POST['password']) : false;
 	$email = isset($_POST['email']) ? clear($_POST['email']) : false;
 	if(empty($username) || empty($password) || empty($email)) {
-		echo 'Riempi tutti i campi.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		$stringa1 = 'Riempi tutti i campi.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		print($stringa1);
 	} elseif(strlen($username) > 16) {
-		echo 'Username troppo lungo. Massimo 16 caratteri.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		$stringa2 = 'Username troppo lungo. Massimo 16 caratteri.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		print($stringa2);
 	} elseif(strlen($password) < 6 || strlen($password) > 20) {
-		echo 'Lunghezza della password non valida. Minimo 6 caratteri e massimo 20.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		$stringa3 = 'Lunghezza della password non valida. Minimo 6 caratteri e massimo 20.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		print($stringa3);
 	} elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		echo 'Indirizzo email non valido.';
+		$stringa4 ='Indirizzo email non valido.';
+		print($stringa4);
 	} elseif(strlen($email) > 60) {
-		echo 'Lunghezza dell\'indirizzo email non valida. Massimo 60 caratteri.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		$stringa5 = 'Lunghezza dell\'indirizzo email non valida. Massimo 60 caratteri.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		print($stringa5);
 	} elseif(mysql_num_rows(mysql_query("SELECT * FROM users WHERE username LIKE '$username'")) > 0) {
-		echo 'Username già in uso. Sei pregato di sceglierne un altro.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		$stringa6 = 'Username già in uso. Sei pregato di sceglierne un altro.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		print($stringa6);
 	} elseif(mysql_num_rows(mysql_query("SELECT * FROM users WHERE email LIKE '$email'")) > 0) {
-		echo 'Indirizzo email già in uso. Sei pregato di sceglierne un altro.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		$stringa7 = 'Indirizzo email già in uso. Sei pregato di sceglierne un altro.<br /><br /><a href="javascript:history.back();">Indietro</a>';
+		print($stringa7);
 	} else {
 		$ip = $_SERVER['REMOTE_ADDR'];
 		if(mysql_query("INSERT INTO users (username, password, email, reg_ip, last_ip, reg_date) VALUES ('$username','$password','$email','$ip','$ip',UNIX_TIMESTAMP())")) {
-			echo 'Registrazione andata a buon fine.<br /><br /><a href="javascript:window.history.go(-2);">Indietro</a>';
+			$stringa8 = 'Registrazione andata a buon fine.<br /><br /><a href="javascript:window.history.go(-2);">Indietro</a>';
+			print($stringa8);
 		} else {
-			echo 'Errore nella query: '.mysql_error();
+			$stringa9 = 'Errore nella query: '.mysql_error();
+			print($stringa9);
 		}
 	}
 } else {
