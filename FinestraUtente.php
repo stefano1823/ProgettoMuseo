@@ -10,7 +10,6 @@
 	$output="";
 	session_start();
 	$cm = $_SESSION["museo_scelto"];
-	$nome_museo = $cm;
 	$risultato2= $dbConn->query("SELECT codice_museo FROM elenco_musei WHERE nome = '$cm';");
 	$row = $risultato2->fetch_assoc();
 	$cod_mus = $row['codice_museo'];
@@ -111,7 +110,7 @@ input.bottone:hover {
 </head>
 
 <body>
-<h1><?php print($nome_museo); ?></h1>
+<h1><?php echo htmlspecialchars($cm); ?></h1>
 <p>Elenco Opere</p>
 <form action="FinestraUtente.php" method="post">
 <table width="1150">
