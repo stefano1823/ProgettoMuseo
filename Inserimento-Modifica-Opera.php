@@ -75,9 +75,9 @@
 			break;
 		}
 		$row = $risultato1->fetch_assoc();
-		$codice_opera = $row['codice_opera']; $nome_opera = $row['nome_opera']; $desc = $row['breve_descrizione']; 
-		$descrizione_opera = $row['descrizione']; $luogo = $row['luogo']; $nome_autore = $row['autore']; $per_sto = $row['periodo_storico'];
-		$tecnica = $row['tecnica']; $dimensione = $row['dimensioni'];$immagine = $row['immagine_opera']; $audio = $row['audio'];
+		$codice_opera = htmlspecialchars($row['codice_opera']); $nome_opera = htmlspecialchars($row['nome_opera']); $desc = htmlspecialchars($row['breve_descrizione']); 
+		$descrizione_opera = htmlspecialchars($row['descrizione']); $luogo = htmlspecialchars($row['luogo']); $nome_autore = htmlspecialchars($row['autore']); $per_sto = htmlspecialchars($row['periodo_storico']);
+		$tecnica = htmlspecialchars($row['tecnica']); $dimensione = htmlspecialchars($row['dimensioni']);$immagine = $row['immagine_opera']; $audio = $row['audio'];
 	}
 	if(isset($crea_opera)){
 		if(($codice_opera==null)||($nome_opera==null)||($desc==null)||($descrizione_opera==null)||($luogo==null)||($nome_autore==null)||($per_sto==null)||($tecnica==null)||($dimensione==null)){
@@ -133,9 +133,9 @@
 				break;
 			}
 			$row = $risultato1->fetch_assoc();
-			$codice_opera = $row['codice_opera']; $nome_opera = $row['nome_opera']; $desc = $row['breve_descrizione']; 
-			$descrizione_opera = $row['descrizione']; $luogo = $row['luogo']; $nome_autore = $row['autore']; $per_sto = $row['periodo_storico'];
-			$tecnica = $row['tecnica']; $dimensione = $row['dimensioni'];$immagine = $row['immagine_opera']; $audio = $row['audio'];
+			$codice_opera = htmlspecialchars($row['codice_opera']); $nome_opera = htmlspecialchars($row['nome_opera']); $desc = htmlspecialchars($row['breve_descrizione']); 
+			$descrizione_opera = htmlspecialchars($row['descrizione']); $luogo = htmlspecialchars($row['luogo']); $nome_autore = htmlspecialchars($row['autore']); $per_sto = htmlspecialchars($row['periodo_storico']);
+			$tecnica = htmlspecialchars($row['tecnica']); $dimensione = htmlspecialchars($row['dimensioni']);$immagine = $row['immagine_opera']; $audio = $row['audio'];
 		}
 	} elseif(isset($annulla)){
 		$codice_opera = "";$nome_opera="";$desc="";$descrizione_opera="";$luogo="";$nome_autore="";$per_sto="";$tecnica="";$dimensioni="";

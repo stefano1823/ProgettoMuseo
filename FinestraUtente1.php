@@ -65,14 +65,14 @@ div {
 <body>
 <form action="FinestraUtente1.php" method="post">
 <?php 
-if($_SESSION["azione"]=="invio") {  $row = $risultato->fetch_assoc(); $codice = $row['codice_opera']; $audio1 = $row['audio']; $immagine =$row['immagine_opera']; $output.="<h6 style=\"font-weight:bold; font-size: 30px; margin-left: 2%; margin-top: -2%\">"; $output.= $row['nome_opera']; $output.="</h6>";
+if($_SESSION["azione"]=="invio") {  $row = $risultato->fetch_assoc(); $codice = htmlspecialchars($row['codice_opera']); $audio1 = htmlspecialchars($row['audio']); $immagine =htmlspecialchars($row['immagine_opera']); $output.="<h6 style=\"font-weight:bold; font-size: 30px; margin-left: 2%; margin-top: -2%\">"; $output.= $row['nome_opera']; $output.="</h6>";
 $output.="<img src=$immagine WIDTH=\"500\" HEIGHT=\"450\" alt=\"ERRORE\" style=\"margin-top: -3%; margin-left: 2%\"/>";
-$output.= "<div style=\"margin-top: 1.5%\">LUOGO <h6 style=\"margin-top:-0.2%\">"; $output.= $row['luogo']; $output.= "</h6></div>"; 
-$output.= "<div style=\"margin-top: -3%\">AUTORE <h6 style=\"margin-top:-0.2%\">"; $output.= $row['autore']; $output.= "</h6></div>";  
-$output.= "<div style=\"margin-top: -3%\">PERIODO STORICO <h6 style=\"margin-top:-0.2%\">"; $output.= $row['periodo_storico']; $output.= "</h6></div>";
-$output.= "<div style=\"margin-top: -3%\">TECNICA <h6 style=\"margin-top:-0.2%\">"; $output.= $row['tecnica']; $output.= "</h6></div>";
-$output.= "<div style=\"margin-top: -3%\">DIMENSIONI <h6 style=\"margin-top:-0.2%\">"; $output.= $row['dimensioni']; $output.= "</h6></div>";  
-$output.= "<div style=\"margin-top: -3%\">DESCRIZIONE <h6 style=\"margin-top:-0.2%\">"; $output.= $row['breve_descrizione']; $output.="</br>";  $output.= $row['descrizione']; $output.= "</h6></div>";  
+$output.= "<div style=\"margin-top: 1.5%\">LUOGO <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['luogo']); $output.= "</h6></div>"; 
+$output.= "<div style=\"margin-top: -3%\">AUTORE <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['autore']); $output.= "</h6></div>";  
+$output.= "<div style=\"margin-top: -3%\">PERIODO STORICO <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['periodo_storico']); $output.= "</h6></div>";
+$output.= "<div style=\"margin-top: -3%\">TECNICA <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['tecnica']); $output.= "</h6></div>";
+$output.= "<div style=\"margin-top: -3%\">DIMENSIONI <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['dimensioni']); $output.= "</h6></div>";  
+$output.= "<div style=\"margin-top: -3%\">DESCRIZIONE <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['breve_descrizione']); $output.="</br>";  $output.= htmlspecialchars($row['descrizione']); $output.= "</h6></div>";  
 } ?>
 <h6 style="margin-left: 2%; margin-top: 1%"><?php print($output);?></h6></br>
 <?php 

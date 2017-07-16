@@ -51,9 +51,9 @@ function doUpload($file, $upload_dir) {
 			break;
 		}
 		$row = $risultato1->fetch_assoc();
-		$codice_museo = $row['codice_museo']; $nome = $row['nome']; $citta = $row['citta']; 
-		$indirizzo = $row['indirizzo']; $orario_apertura = $row['orario_apertura']; $orario_chiusura = $row['orario_chiusura']; 
-		$descrizione = $row['descrizione']; $immagine = $row['immagine_museo'];
+		$codice_museo = htmlspecialchars($row['codice_museo']); $nome = htmlspecialchars($row['nome']); $citta = htmlspecialchars($row['citta']); 
+		$indirizzo = htmlspecialchars($row['indirizzo']); $orario_apertura = htmlspecialchars($row['orario_apertura']); $orario_chiusura = htmlspecialchars($row['orario_chiusura']); 
+		$descrizione = htmlspecialchars($row['descrizione']); $immagine = $row['immagine_museo'];
 	}
 	if(isset($crea_museo)){
 		if(($codice_museo==null)||($nome==null)||($citta==null)||($indirizzo==null)||($orario_apertura==null)||($orario_chiusura==null)||($descrizione==null)){
@@ -96,10 +96,10 @@ function doUpload($file, $upload_dir) {
 				break;
 			}
 			$row = $risultato1->fetch_assoc();
-			$codice_museo = $row['codice_museo']; $nome = $row['nome']; $citta = $row['citta']; 
-			$indirizzo = $row['indirizzo']; $orario_apertura = $row['orario_apertura']; $orario_chiusura = $row['orario_chiusura']; 
-			$descrizione = $row['descrizione']; 
-		} 
+			$codice_museo = htmlspecialchars($row['codice_museo']); $nome = htmlspecialchars($row['nome']); $citta = htmlspecialchars($row['citta']); 
+			$indirizzo = htmlspecialchars($row['indirizzo']); $orario_apertura = htmlspecialchars($row['orario_apertura']); $orario_chiusura = htmlspecialchars($row['orario_chiusura']); 
+			$descrizione = htmlspecialchars($row['descrizione']); $immagine = $row['immagine_museo'];
+		}  
 	} elseif(isset($annulla)){
 		$codice_museo = "";$nome="";$citta="";$indirizzo="";$oradio_apertura="";$oradio_chiusura="";$descrizione="";
 	} 

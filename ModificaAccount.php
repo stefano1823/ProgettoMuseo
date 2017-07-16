@@ -43,7 +43,7 @@
 			break;
 		}
 		$row1 = $risultato2->fetch_assoc();
-		$username = $row1['username']; $password = $row1['password']; $email = $row1['email'];
+		$username = htmlspecialchars($row1['username']); $password = htmlspecialchars($row1['password']); $email = htmlspecialchars($row1['email']);
 	}
 	if(isset($modifica_account)) {
 		$ident = $_SESSION["ca"];
@@ -63,7 +63,7 @@
 					break;
 				}
 				$row1 = $risultato2->fetch_assoc();
-				$username = $row1['username']; $password = $row1['password']; $email = $row1['email'];
+				$username = htmlspecialchars($row1['username']); $password = htmlspecialchars($row1['password']); $email = htmlspecialchars($row1['email']);
 			}
 	}elseif(isset($annulla)){
 		$username = "";$password="";$email="";
