@@ -1,5 +1,5 @@
 <?php
-include('core.php');
+(include 'core.php');
 extract($_POST);
 session_start();
 if(isset($_POST['login'])) {

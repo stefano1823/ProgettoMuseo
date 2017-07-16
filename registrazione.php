@@ -1,5 +1,5 @@
 <?php
-include('core.php');
+(include 'core.php');
 if(isset($_POST['register'])) {
 	$username = isset($_POST['username']) ? clear($_POST['username']) : false;
 	$password = isset($_POST['password']) ? clear($_POST['password']) : false;

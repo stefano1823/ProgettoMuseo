@@ -22,7 +22,7 @@
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 
 	 
-function doUpload($file, $upload_dir) {
+function doUpload($upload_dir) {
     $nomefile = $_FILES['userimage']['tmp_name']; 
     $nomereale = $_FILES['userimage']['name']; 
     $nomereale = htmlentities(strtolower($nomereale)); 
@@ -65,7 +65,7 @@ function doUpload($file, $upload_dir) {
 				if ($dimensione_file > $dimensione_max) { 
 					print $tooBig; 
 				} else { 
-					doUpload($file, $upload_dir); 
+					doUpload($upload_dir); 
 					$nome_immagine = $_SESSION["nome_img"];
 					$percorso_img = "immagini/".$nome_immagine;
 					$immagine = "immagini/".$nome_immagine;

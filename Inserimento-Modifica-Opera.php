@@ -24,7 +24,7 @@
 	//*************************************** 	
 	
 	 
-	function doUpload($file, $upload_dir) { 
+	function doUpload($upload_dir) { 
     $nomefile = $_FILES['userimage']['tmp_name']; 
     $nomereale = $_FILES['userimage']['name']; 
     $nomereale = htmlentities(strtolower($nomereale)); 
@@ -44,7 +44,7 @@
 		$_SESSION["nome_img1"] = $newname;
     } else print $wrongUp; 
 } 
-	function doUpload1($file1, $upload_dir1) {  
+	function doUpload1($upload_dir1) {  
     $nomefile = $_FILES['useraudio']['tmp_name']; 
     $nomereale = $_FILES['useraudio']['name']; 
     $nomereale = htmlentities(strtolower($nomereale)); 
@@ -88,7 +88,7 @@
 				if ($dimensione_file > $dimensione_max) { 
 					print $tooBig; 
 				} else { 
-					doUpload($file, $upload_dir); 
+					doUpload($upload_dir); 
 					$nome_immagine = $_SESSION["nome_img1"];
 					$percorso_img = "immagini/".$nome_immagine;
 					$immagine = "immagini/".$nome_immagine;
@@ -101,7 +101,7 @@
 				if ($dimensione_file1 > $dimensione_max) { 
 					print $tooBig; 
 				} else { 
-					doUpload1($file1, $upload_dir1); 
+					doUpload1($upload_dir1); 
 					$nome_audio = $_SESSION["nome_aud"];
 					$percorso_aud = "audio/".$nome_audio;
 					$audio = "audio/".$nome_audio;
