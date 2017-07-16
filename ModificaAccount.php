@@ -16,7 +16,7 @@
 		echo "Impossibile eseguire la query!";
 		break;
 	}
-	while(($row = $risultato->fetch_assoc()) != NULL){
+	while(($row = $risultato->fetch_assoc()) != null){
 		$output.="<tr>";
 		$output.="<td> <input type=\"radio\" name=\"scelta\" value=\"$row[id]\"> </td>";
 		foreach ($row as $key => $value) {

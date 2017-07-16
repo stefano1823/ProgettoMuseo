@@ -11,7 +11,7 @@
 		echo "Impossibile eseguire la query!";
 		break;
 	}
-	while(($row = $risultato->fetch_assoc()) != NULL){
+	while(($row = $risultato->fetch_assoc()) != null){
 		foreach ($row as $key => $value) {
 			$output.="<option value=\"$value\"> $value </option>";
 		}

@@ -18,7 +18,7 @@
 		echo "Impossibile eseguire la query!";
 		break;
 	}
-	while(($row = $risultato->fetch_assoc()) != NULL){
+	while(($row = $risultato->fetch_assoc()) != null){
 		$output.="<tr>";
 		$output.="<td> <input type=\"radio\" name=\"scelta\" value=\"$row[codice_opera]\"> </td>";
 		$cont = 0;
@@ -38,7 +38,7 @@
 		break;
 	}
 	$numero_righe = $risultato1->num_rows;
-	while(($row1 = $risultato1->fetch_assoc()) != NULL){
+	while(($row1 = $risultato1->fetch_assoc()) != null){
 		foreach ($row1 as $key1 => $value1) {
 			$output1 = $value1;
 		}
