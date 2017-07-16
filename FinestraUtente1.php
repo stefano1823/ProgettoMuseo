@@ -76,10 +76,12 @@ $output.= "<div style=\"margin-top: -3%\">DESCRIZIONE <h6 style=\"margin-top:-0.
 } ?>
 <h6 style="margin-left: 2%; margin-top: 1%"><?php print($output);?></h6></br>
 <?php 
-echo "<div style=\"margin-left:2%; margin-top: -4%\">QR-CODE</div>";
+$stringa = "<div style=\"margin-left:2%; margin-top: -4%\">QR-CODE</div>";
+print($stringa);
 echo "<img src='/qr-code/php/qr_img.php?d=$codice' style=\"margin-left: 2%\" WIDTH=\"150\" HEIGHT=\"150\" />";
 if($audio1 != NULL) {
-	echo "<div style=\"margin-left:2%; margin-top: 1%\">RIPRODUZIONE AUDIO</div>";
+	$stringa1 = "<div style=\"margin-left:2%; margin-top: 1%\">RIPRODUZIONE AUDIO</div>";
+	print($stringa1);
 	echo "<embed src=\"$audio1\" width=\"300\" height=\"50\" autostart =\"false\" style=\"margin-left: 2%; margin-top: 1%;\" ></embed>";
 }
 ?>
