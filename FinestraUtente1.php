@@ -4,7 +4,8 @@
 	session_start();
 	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
 	if (!$dbConn) {
-		die("Impossibile connettersi: " . mysql_error());
+		echo "Impossibile connettersi al database!";
+		break;
 	}
 	$dbConn->set_charset("utf8");
 	$output="";
@@ -12,7 +13,8 @@
 		$co = $_SESSION["co"];
 		$risultato= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione, descrizione, luogo, autore, periodo_storico, tecnica, dimensioni, immagine_opera, audio FROM elenco_opere WHERE codice_opera = '$co';");
 		if(!$risultato){
-			die("Impossibile eseguire la query: " . mysql_error());
+			echo "Impossibile eseguire la query!";
+			break;
 		}
 	} 
 	$dbConn->close();

@@ -17,7 +17,7 @@ if(isset($_POST['login'])) {
 			$username = mysql_result(mysql_query("SELECT username FROM users WHERE username LIKE '$username'"), 0);
 			$userid = mysql_result(mysql_query("SELECT id FROM users WHERE username LIKE '$username'"), 0);
 			$tipo = mysql_result(mysql_query("SELECT tipo FROM users WHERE username LIKE '$username'"), 0);
-			mysql_query("UPDATE users SET last_login='".time()."', last_ip='$ip' WHERE id='$userid'") or die(mysql_error());
+			mysql_query("UPDATE users SET last_login='".time()."', last_ip='$ip' WHERE id='$userid'") or break;
 			if ($tipo==0){
 				header("Location: GestioneMuseo.php");
 			} elseif($tipo == 1) {

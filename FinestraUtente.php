@@ -3,7 +3,8 @@
 	extract($_POST);
 	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
 	if (!$dbConn) {
-		die("Impossibile connettersi: " . mysql_error());
+		echo "Impossibile connettersi al database!";
+		break;
 	}
 	$dbConn->set_charset("utf8");
 	$output="";
@@ -14,7 +15,8 @@
 	$cod_mus = $row['codice_museo'];
 	$risultato= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione, immagine_opera FROM elenco_opere WHERE codice_mus = '$cod_mus';");
 	if(!$risultato){
-		die("Impossibile eseguire la query: " . mysql_error());
+		echo "Impossibile eseguire la query!";
+		break;
 	}
 	while(($row = $risultato->fetch_assoc()) != NULL){
 		$output.="<tr>";
@@ -32,7 +34,8 @@
 	}
 	$risultato1= $dbConn->query("SELECT nome FROM elenco_musei WHERE codice_museo = '1200';");
 	if(!$risultato1){
-		die("Impossibile eseguire la query: " . mysql_error());
+		echo "Impossibile eseguire la query!";
+		break;
 	}
 	$numero_righe = $risultato1->num_rows;
 	while(($row1 = $risultato1->fetch_assoc()) != NULL){

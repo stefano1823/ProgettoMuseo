@@ -3,7 +3,8 @@
 	extract($_POST);
 	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
 	if (!$dbConn) {
-		die("Impossibile connettersi: " . mysql_error());
+		echo "Impossibile connettersi al database!";
+		break;
 	}
 	$dbConn->set_charset("utf8");
 	$output1="";
@@ -13,7 +14,8 @@
 	$cm = $_SESSION["cm"];
 	$risultato1= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione FROM elenco_opere WHERE codice_mus = '$cm';");
 	if(!$risultato1){
-		die("Impossibile eseguire la query: " . mysql_error());
+		echo "Impossibile eseguire la query!";
+		break;
 	}
 	while(($row1 = $risultato1->fetch_assoc()) != NULL){
 		$output1.="<tr>";
@@ -32,7 +34,8 @@
 		$codice_opera=$scelta1;
 		$risultato2= $dbConn->query("DELETE FROM elenco_opere WHERE codice_opera = '$codice_opera';");
 		if(!$risultato2){
-			die("Impossibile eseguire la query: " . mysql_error());
+			echo "Impossibile eseguire la query!";
+			break;
 		}
 		$esitoOp="<p>Opera eliminata</p>";
 		header("Location: Gestione-Opere.php");

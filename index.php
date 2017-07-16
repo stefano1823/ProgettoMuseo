@@ -2,12 +2,14 @@
 	extract($_POST);
 	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
 	if (!$dbConn) {
-		die("Impossibile connettersi: " . mysql_error());
+		echo "Impossibile connettersi al database!";
+		break;
 	}
 	$output="";
 	$risultato= $dbConn->query("SELECT nome FROM elenco_musei;");
 	if(!$risultato){
-		die("Impossibile eseguire la query: " . mysql_error());
+		echo "Impossibile eseguire la query!";
+		break;
 	}
 	while(($row = $risultato->fetch_assoc()) != NULL){
 		foreach ($row as $key => $value) {

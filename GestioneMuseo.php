@@ -3,7 +3,8 @@
 	extract($_POST);
 	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
 	if (!$dbConn) {
-		die("Impossibile connettersi: " . mysql_error());
+		echo "Impossibile connettersi al database!";
+		break;
 	}
 	$dbConn->set_charset("utf8");
 	$output="";
@@ -12,7 +13,8 @@
 	
 	$risultato= $dbConn->query("SELECT codice_museo,nome,citta FROM elenco_musei;");
 	if(!$risultato){
-		die("Impossibile eseguire la query: " . mysql_error());
+		echo "Impossibile eseguire la query!";
+		break;
 	}
 	while(($row = $risultato->fetch_assoc()) != NULL){
 		$output.="<tr>";
@@ -36,10 +38,12 @@
 		$risultato2= $dbConn->query("DELETE FROM elenco_opere WHERE codice_mus = '$codice_museo';");
 		$risultato3= $dbConn->query("DELETE FROM elenco_musei WHERE codice_museo = '$codice_museo';");
 		if(!$risultato2){
-			die("Impossibile eseguire la query: " . mysql_error());
+			echo "Impossibile eseguire la query!";
+			break;
 		}
 		if(!$risultato3){
-			die("Impossibile eseguire la query: " . mysql_error());
+			echo "Impossibile eseguire la query!";
+			break;
 		}
 		$esitoOp="<h6>Museo eliminato</h6>";
 		header("Location: GestioneMuseo.php");

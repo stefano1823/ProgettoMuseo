@@ -2,7 +2,8 @@
 	extract($_POST);
 	$dbConn = new mysqli("localhost", "onlinemuseum", "","my_onlinemuseum");
 	if (!$dbConn) {
-		die("Impossibile connettersi: " . mysql_error());
+		echo "Impossibile connettersi al database!";
+		break;
 	}
 	$output="";
 	$flag = false;
@@ -12,7 +13,8 @@
 	
 	$risultato= $dbConn->query("SELECT id, username, password, email FROM users WHERE tipo = '0';");
 	if(!$risultato){
-		die("Impossibile eseguire la query: " . mysql_error());
+		echo "Impossibile eseguire la query!";
+		break;
 	}
 	while(($row = $risultato->fetch_assoc()) != NULL){
 		$output.="<tr>";
@@ -26,7 +28,8 @@
 		$codice_account=$scelta;
 		$risultato1= $dbConn->query("DELETE FROM users WHERE id = '$codice_account';");
 		if(!$risultato1){
-			die("Impossibile eseguire la query: " . mysql_error());
+			echo "Impossibile eseguire la query!";
+			break;
 		}
 		$esito="<p>Account Eliminato</p>";
 		header("Location: ModificaAccount.php");
@@ -36,7 +39,8 @@
 		$_SESSION["ca"]=$co_ac;
 		$risultato2= $dbConn->query("SELECT username, password, email FROM users WHERE id='$co_ac';");
 		if(!$risultato2){
-			die("Impossibile eseguire la query: " . mysql_error());
+			echo "Impossibile eseguire la query!";
+			break;
 		}
 		$row1 = $risultato2->fetch_assoc();
 		$username = $row1['username']; $password = $row1['password']; $email = $row1['email'];
@@ -49,12 +53,14 @@
 				$username1 = $_POST['username']; $password1 = $_POST['password']; $email1 = $_POST['email'];
 				$risultato3= $dbConn->query("UPDATE users SET username='$username1', password = '$password1', email = '$email1' WHERE id = '$ident';");
 				if(!$risultato3){
-					die("Impossibile eseguire la query: " . mysql_error());
+					echo "Impossibile eseguire la query!";
+					break;
 				}
 				$esito="<p>Modifiche salvate</p>";
 				$risultato2= $dbConn->query("SELECT username, password, email FROM users WHERE id='$ident';");
 				if(!$risultato2){
-					die("Impossibile eseguire la query: " . mysql_error());
+					echo "Impossibile eseguire la query!";
+					break;
 				}
 				$row1 = $risultato2->fetch_assoc();
 				$username = $row1['username']; $password = $row1['password']; $email = $row1['email'];
