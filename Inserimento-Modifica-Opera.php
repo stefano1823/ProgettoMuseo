@@ -25,7 +25,6 @@
 	
 	 
 	function doUpload($file, $upload_dir) { 
-    global $thatsAll; 
     $nomefile = $_FILES['userimage']['tmp_name']; 
     $nomereale = $_FILES['userimage']['name']; 
     $nomereale = htmlentities(strtolower($nomereale)); 
@@ -45,8 +44,7 @@
 		$_SESSION["nome_img1"] = $newname;
     } else print $wrongUp; 
 } 
-	function doUpload1($file1, $upload_dir1) { 
-    global $thatsAll; 
+	function doUpload1($file1, $upload_dir1) {  
     $nomefile = $_FILES['useraudio']['tmp_name']; 
     $nomereale = $_FILES['useraudio']['name']; 
     $nomereale = htmlentities(strtolower($nomereale)); 

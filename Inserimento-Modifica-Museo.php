@@ -22,8 +22,7 @@
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 
 	 
-function doUpload($file, $upload_dir) { 
-    global $thatsAll; 
+function doUpload($file, $upload_dir) {
     $nomefile = $_FILES['userimage']['tmp_name']; 
     $nomereale = $_FILES['userimage']['name']; 
     $nomereale = htmlentities(strtolower($nomereale)); 
