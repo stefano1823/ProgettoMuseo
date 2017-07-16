@@ -65,7 +65,7 @@ div {
 <body>
 <form action="FinestraUtente1.php" method="post">
 <?php 
-if($_SESSION['azione']=='invio"') {  $row = $risultato->fetch_assoc(); $codice = htmlspecialchars($row['codice_opera']); $audio1 = htmlspecialchars($row['audio']); $immagine =htmlspecialchars($row['immagine_opera']); $output.="<h6 style=\"font-weight:bold; font-size: 30px; margin-left: 2%; margin-top: -2%\">"; $output.= $row['nome_opera']; $output.="</h6>";
+if($_SESSION['azione']=='invio') {  $row = $risultato->fetch_assoc(); $codice = htmlspecialchars($row['codice_opera']); $audio1 = htmlspecialchars($row['audio']); $immagine =htmlspecialchars($row['immagine_opera']); $output.="<h6 style=\"font-weight:bold; font-size: 30px; margin-left: 2%; margin-top: -2%\">"; $output.= $row['nome_opera']; $output.="</h6>";
 $output.="<img src=$immagine WIDTH=\"500\" HEIGHT=\"450\" alt=\"ERRORE\" style=\"margin-top: -3%; margin-left: 2%\"/>";
 $output.= "<div style=\"margin-top: 1.5%\">LUOGO <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['luogo']); $output.= "</h6></div>"; 
 $output.= "<div style=\"margin-top: -3%\">AUTORE <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['autore']); $output.= "</h6></div>";  
