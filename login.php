@@ -7,7 +7,6 @@ csrfProtector::init();
 if(isset($_POST['login'])) {
 	$username = isset($_POST['username']) ? clear($_POST['username']) : false;
 	$password = isset($_POST['password']) ? clear($_POST['password']) : false;
-	$password = md5($password);
 	if(empty($username) || empty($password)) {
 		$stringa1 = 'Riempi tutti i campi.<br /><br /><a href="javascript:history.back();">Indietro</a>';
 		print($stringa1);

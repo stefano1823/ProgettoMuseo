@@ -33,7 +33,6 @@ if(isset($_POST['register'])) {
 		print($stringa7);
 	} else {
 		$ip = $_SERVER['REMOTE_ADDR'];
-		$password = md5($password);
 		if(mysql_query("INSERT INTO users (username, password, email, reg_ip, last_ip, reg_date) VALUES ('$username','$password','$email','$ip','$ip',UNIX_TIMESTAMP())")) {
 			$stringa8 = 'Registrazione andata a buon fine.<br /><br /><a href="javascript:window.history.go(-2);">Indietro</a>';
 			print($stringa8);
