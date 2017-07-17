@@ -1,9 +1,10 @@
 <?php
 	extract($_POST);
-	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!(isset($dbConn))) {
+	$collegamento = 'mysql:host=localhost;dbname=my_onlinemuseum';
+	try {
+		$dbConn = new PDO($collegamento , 'onlinemuseum', '');
+	}catch(PDOException $e) {
 		echo 'Impossibile connettersi al database!';
-		break;
 	}
 	$output='';
 	$flag = false;
@@ -12,12 +13,13 @@
 	session_start();
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
 	csrfProtector::init();
-	$risultato= $dbConn->query("SELECT id, username, password, email FROM users WHERE tipo = '0';");
+	$risultato = $dbConn->prepare("SELECT id, username, password, email FROM users WHERE tipo = ?;");
 	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
 		break;
 	}
-	while(($row = $risultato->fetch_assoc()) != null){
+	$risultato->execute(array(0));
+	while($row = $risultato->fetch(PDO::FETCH_ASSOC)){
 		$output.='<tr>';
 		$output.="<td> <input type=\"radio\" name=\"scelta\" value=\"$row[id]\"> </td>";
 		foreach ($row as $key => $value) {
@@ -27,24 +29,29 @@
 	}
 	if(isset($elimina_account)) {
 		$codice_account=$scelta;
-		$risultato1= $dbConn->query("DELETE FROM users WHERE id = '$codice_account';");
+		$risultato1= $dbConn->prepare("DELETE FROM users WHERE id = :codice_account;");
 		if(!(isset($risultato1))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
+		$risultato1->execute(array(':codice_account' => $codice_account));
 		$esito='<p>Account Eliminato</p>';
 		header('Location: ModificaAccount.php');
 	} elseif(isset($modifica)) {
 		$flag = true;
 		$co_ac = $scelta;
 		$_SESSION['ca']=$co_ac;
-		$risultato2= $dbConn->query("SELECT username, password, email FROM users WHERE id='$co_ac';");
+		$risultato2 = $dbConn->prepare("SELECT username, password, email FROM users WHERE id= :co_ac;");
 		if(!(isset($risultato2))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
-		$row1 = $risultato2->fetch_assoc();
-		$username = htmlspecialchars($row1['username']); $password = htmlspecialchars($row1['password']); $email = htmlspecialchars($row1['email']);
+		$risultato2->execute(array(':co_ac' => $co_ac));
+		while($row1 = $risultato2->fetch(PDO::FETCH_ASSOC)){
+			$username = htmlspecialchars($row1['username']); 
+			$password = htmlspecialchars($row1['password']); 
+			$email = htmlspecialchars($row1['email']);
+		}		
 	}
 	if(isset($modifica_account)) {
 		$ident = $_SESSION['ca'];
@@ -52,24 +59,28 @@
 				$controllocampi='<p>Compilare tutti i campi</p>';
 			} else {
 				$username1 = $_POST['username']; $password1 = $_POST['password']; $email1 = $_POST['email'];
-				$risultato3= $dbConn->query("UPDATE users SET username='$username1', password = '$password1', email = '$email1' WHERE id = '$ident';");
+				$risultato3 = $dbConn->prepare("UPDATE users SET username= :username1, password = :password1, email = :email1 WHERE id = :ident;");
 				if(!(isset($risultato3))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
+				$risultato3->execute(array(':username1' => $username1,':password1' => $password1,':email1' => $email1,':ident' => $ident));
 				$esito='<p>Modifiche salvate</p>';
-				$risultato2= $dbConn->query("SELECT username, password, email FROM users WHERE id='$ident';");
+				$risultato2 = $dbConn->prepare("SELECT username, password, email FROM users WHERE id= :ident;");
 				if(!(isset($risultato2))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
-				$row1 = $risultato2->fetch_assoc();
-				$username = htmlspecialchars($row1['username']); $password = htmlspecialchars($row1['password']); $email = htmlspecialchars($row1['email']);
+				$risultato2->execute(array(':ident' => $ident));
+				while($row1 = $risultato2->fetch(PDO::FETCH_ASSOC)){
+					$username = htmlspecialchars($row1['username']); 
+					$password = htmlspecialchars($row1['password']); 
+					$email = htmlspecialchars($row1['email']);
+				}
 			}
 	}elseif(isset($annulla)){
 		$username = '';$password='';$email='';
 	} 
-	$dbConn->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

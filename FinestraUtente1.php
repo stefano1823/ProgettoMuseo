@@ -2,22 +2,34 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
 	session_start();
-	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!(isset($dbConn))) {
+	$collegamento = 'mysql:host=localhost;dbname=my_onlinemuseum';
+	try {
+		$dbConn = new PDO($collegamento , 'onlinemuseum', '');
+	}catch(PDOException $e) {
 		echo 'Impossibile connettersi al database!';
-		break;
 	}
-	$dbConn->set_charset('utf8');
+	$dbConn->exec('set names utf8');
 	$output='';
 	if($_SESSION['azione']=='invio') {
 		$co = $_SESSION['co'];
-		$risultato= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione, descrizione, luogo, autore, periodo_storico, tecnica, dimensioni, immagine_opera, audio FROM elenco_opere WHERE codice_opera = '$co';");
+		$risultato= $dbConn->prepare("SELECT codice_opera, nome_opera, breve_descrizione, descrizione, luogo, autore, periodo_storico, tecnica, dimensioni, immagine_opera, audio FROM elenco_opere WHERE codice_opera = :co;");
 		if(!(isset($risultato))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
-	} 
-	$dbConn->close();
+		$risultato->execute(array(':co' => $co));
+		while($row = $risultato->fetch(PDO::FETCH_ASSOC)) {
+			$codice = htmlspecialchars($row['codice_opera']); $audio1 = htmlspecialchars($row['audio']); $immagine =htmlspecialchars($row['immagine_opera']);
+			$output.="<h6 style=\"font-weight:bold; font-size: 30px; margin-left: 2%; margin-top: -2%\">"; $output.= $row['nome_opera']; $output.="</h6>";
+			$output.="<img src=$immagine WIDTH=\"500\" HEIGHT=\"450\" alt=\"ERRORE\" style=\"margin-top: -3%; margin-left: 2%\"/>";
+			$output.= "<div style=\"margin-top: 1.5%\">LUOGO <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['luogo']); $output.= "</h6></div>"; 
+			$output.= "<div style=\"margin-top: -3%\">AUTORE <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['autore']); $output.= "</h6></div>";  
+			$output.= "<div style=\"margin-top: -3%\">PERIODO STORICO <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['periodo_storico']); $output.= "</h6></div>";
+			$output.= "<div style=\"margin-top: -3%\">TECNICA <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['tecnica']); $output.= "</h6></div>";
+			$output.= "<div style=\"margin-top: -3%\">DIMENSIONI <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['dimensioni']); $output.= "</h6></div>";  
+			$output.= "<div style=\"margin-top: -3%\">DESCRIZIONE <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['breve_descrizione']); $output.="</br>";  $output.= htmlspecialchars($row['descrizione']); $output.= "</h6></div>";  
+		}
+	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -64,17 +76,7 @@ div {
 
 <body>
 <form action="FinestraUtente1.php" method="post">
-<?php 
-if($_SESSION['azione']=='invio') {  $row = $risultato->fetch_assoc(); $codice = htmlspecialchars($row['codice_opera']); $audio1 = htmlspecialchars($row['audio']); $immagine =htmlspecialchars($row['immagine_opera']); $output.="<h6 style=\"font-weight:bold; font-size: 30px; margin-left: 2%; margin-top: -2%\">"; $output.= $row['nome_opera']; $output.="</h6>";
-$output.="<img src=$immagine WIDTH=\"500\" HEIGHT=\"450\" alt=\"ERRORE\" style=\"margin-top: -3%; margin-left: 2%\"/>";
-$output.= "<div style=\"margin-top: 1.5%\">LUOGO <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['luogo']); $output.= "</h6></div>"; 
-$output.= "<div style=\"margin-top: -3%\">AUTORE <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['autore']); $output.= "</h6></div>";  
-$output.= "<div style=\"margin-top: -3%\">PERIODO STORICO <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['periodo_storico']); $output.= "</h6></div>";
-$output.= "<div style=\"margin-top: -3%\">TECNICA <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['tecnica']); $output.= "</h6></div>";
-$output.= "<div style=\"margin-top: -3%\">DIMENSIONI <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['dimensioni']); $output.= "</h6></div>";  
-$output.= "<div style=\"margin-top: -3%\">DESCRIZIONE <h6 style=\"margin-top:-0.2%\">"; $output.= htmlspecialchars($row['breve_descrizione']); $output.="</br>";  $output.= htmlspecialchars($row['descrizione']); $output.= "</h6></div>";  
-} ?>
-<h6 style="margin-left: 2%; margin-top: 1%"><?php print($output);?></h6></br>
+<h6 style="margin-left: 2%; margin-top: 1%"><?php if($_SESSION['azione']=='invio') { print($output);}?></h6></br>
 <?php 
 $stringa = "<div style=\"margin-left:2%; margin-top: -4%\">QR-CODE</div>";
 print($stringa);
