@@ -2,7 +2,7 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
 	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!$dbConn) {
+	if (!(isset($dbConn))) {
 		echo 'Impossibile connettersi al database!';
 		break;
 	}
@@ -68,7 +68,7 @@
 	if($_SESSION['azione']=='update'){
 		$co_op = $_SESSION['co1'];
 		$risultato1= $dbConn->query("SELECT * FROM elenco_opere WHERE codice_opera='$co_op';");
-		if(!$risultato1){
+		if(!(isset($risultato1))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
@@ -110,7 +110,7 @@
 			if($_SESSION['azione']=='insert1'&&$flag=='') {
 				$risultato= $dbConn->query("INSERT INTO elenco_opere(codice_opera,nome_opera,breve_descrizione,descrizione,luogo,autore,periodo_storico,tecnica,dimensioni,immagine_opera,audio,codice_mus)
 							VALUES('$codice_opera','$nome_opera','$desc','$descrizione_opera','$luogo','$nome_autore','$per_sto','$tecnica','$dimensione','$percorso_img','$percorso_aud','$cm');");
-				if(!$risultato){
+				if(!(isset($risultato))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
@@ -119,14 +119,14 @@
 				$codice_opera1 = $_POST['codice_opera']; $nome_opera1 = $_POST['nome_opera']; $descrizione1 = $_POST['desc']; $descrizione_opera1 = $_POST['descrizione_opera']; $luogo1 = $_POST['luogo'];
 				$nome_autore1 = $_POST['nome_autore']; $per_sto1 = $_POST['per_sto']; $tecnica1 = $_POST['tecnica']; $dimensione1 = $_POST['dimensione']; 
 				$risultato2= $dbConn->query("UPDATE elenco_opere SET codice_opera=$codice_opera1, nome_opera='$nome_opera1', breve_descrizione='$descrizione1', descrizione='$descrizione_opera1', luogo = '$luogo1', autore = '$nome_autore1', periodo_storico = '$per_sto1',tecnica='$tecnica1',dimensioni='$dimensione1', immagine_opera='$immagine', audio = '$audio' WHERE codice_opera = '$codice_opera';");
-				if(!$risultato2){
+				if(!(isset($risultato2))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
 				$esito='<p>Modifiche salvate</p>';
 			}
 			$risultato1= $dbConn->query("SELECT * FROM elenco_opere WHERE codice_opera='$codice_opera';");
-			if(!$risultato1){
+			if(!(isset($risultato1))){
 				echo 'Impossibile eseguire la query!';
 				break;
 			}

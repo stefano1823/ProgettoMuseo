@@ -2,7 +2,7 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
 	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!$dbConn) {
+	if (!(isset($dbConn))) {
 		echo 'Impossibile connettersi al database!';
 		break;
 	}
@@ -14,7 +14,7 @@
 	$row = $risultato2->fetch_assoc();
 	$cod_mus = $row['codice_museo'];
 	$risultato= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione, immagine_opera FROM elenco_opere WHERE codice_mus = '$cod_mus';");
-	if(!$risultato){
+	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
 		break;
 	}
@@ -33,7 +33,7 @@
 		$output.='</tr>';
 	}
 	$risultato1= $dbConn->query("SELECT nome FROM elenco_musei WHERE codice_museo = '1200';");
-	if(!$risultato1){
+	if(!(isset($risultato1))){
 		echo 'Impossibile eseguire la query!';
 		break;
 	}

@@ -2,7 +2,7 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
 	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!$dbConn) {
+	if (!(isset($dbConn))){
 		echo 'Impossibile connettersi al database!';
 		break;
 	}
@@ -45,7 +45,7 @@ function doUpload($upload_dir) {
 	if($_SESSION['azione']=='update'){
 		$co_mu = $_SESSION['cm1'];
 		$risultato1= $dbConn->query("SELECT * FROM elenco_musei WHERE codice_museo='$co_mu';");
-		if(!$risultato1){
+		if(!(isset($risultato1))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
@@ -74,7 +74,7 @@ function doUpload($upload_dir) {
 			if($_SESSION['azione']=='insert'&&$flag=='') {
 				$risultato= $dbConn->query("INSERT INTO elenco_musei(codice_museo,nome,citta,indirizzo,orario_apertura,orario_chiusura,descrizione,immagine_museo)
 								VALUES('$codice_museo','$nome','$citta','$indirizzo','$orario_apertura','$orario_chiusura','$descrizione','$percorso_img');");
-				if(!$risultato){
+				if(!(isset($risultato))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
@@ -83,14 +83,14 @@ function doUpload($upload_dir) {
 				$codice_museo1 = $_POST['codice_museo']; $nome1 = $_POST['nome']; $citta1 = $_POST['citta']; $indirizzo1 = $_POST['indirizzo']; $orario_apertura1 = $_POST['orario_apertura'];
 				$orario_chiusura1 = $_POST['orario_chiusura']; $descrizione1 = $_POST['descrizione'];
 				$risultato2= $dbConn->query("UPDATE elenco_musei SET codice_museo=$codice_museo1, nome='$nome1', citta = '$citta1', indirizzo = '$indirizzo1', orario_apertura = '$orario_apertura1', orario_chiusura = '$orario_chiusura1', descrizione = '$descrizione1', immagine_museo = '$immagine' WHERE codice_museo = '$codice_museo';");
-				if(!$risultato2){
+				if(!(isset($risultato2))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
 				$esito='<p>Modifiche salvate</p>';
 			}
 			$risultato1= $dbConn->query("SELECT * FROM elenco_musei WHERE codice_museo='$codice_museo';");
-			if(!$risultato1){
+			if(!(isset($risultato1))){
 				echo 'Impossibile eseguire la query!';
 				break;
 			}

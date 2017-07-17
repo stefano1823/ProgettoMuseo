@@ -3,7 +3,7 @@
 	extract($_POST);
 	session_start();
 	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if ($dbConn) {} else {
+	if (!(isset($dbConn))) {
 		echo 'Impossibile connettersi al database!';
 		break;
 	}
@@ -12,7 +12,7 @@
 	if($_SESSION['azione']=='invio') {
 		$co = $_SESSION['co'];
 		$risultato= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione, descrizione, luogo, autore, periodo_storico, tecnica, dimensioni, immagine_opera, audio FROM elenco_opere WHERE codice_opera = '$co';");
-		if($risultato){}else{
+		if(!(isset($risultato))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}

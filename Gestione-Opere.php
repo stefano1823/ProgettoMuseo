@@ -2,7 +2,7 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
 	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!$dbConn) {
+	if (!(isset($dbConn))) {
 		echo 'Impossibile connettersi al database!';
 		break;
 	}
@@ -13,7 +13,7 @@
 	
 	$cm = $_SESSION['cm'];
 	$risultato1= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione FROM elenco_opere WHERE codice_mus = '$cm';");
-	if(!$risultato1){
+	if(!(isset($risultato1))){
 		echo 'Impossibile eseguire la query!';
 		break;
 	}
@@ -33,7 +33,7 @@
 	elseif(isset($elimina_opera)) {
 		$codice_opera=$scelta1;
 		$risultato2= $dbConn->query("DELETE FROM elenco_opere WHERE codice_opera = '$codice_opera';");
-		if(!$risultato2){
+		if(!(isset($risultato2))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}

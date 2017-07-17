@@ -1,7 +1,7 @@
 <?php
 	extract($_POST);
 	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!$dbConn) {
+	if (!(isset($dbConn))) {
 		echo 'Impossibile connettersi al database!';
 		break;
 	}
@@ -12,7 +12,7 @@
 	session_start();
 	
 	$risultato= $dbConn->query("SELECT id, username, password, email FROM users WHERE tipo = '0';");
-	if(!$risultato){
+	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
 		break;
 	}
@@ -27,7 +27,7 @@
 	if(isset($elimina_account)) {
 		$codice_account=$scelta;
 		$risultato1= $dbConn->query("DELETE FROM users WHERE id = '$codice_account';");
-		if(!$risultato1){
+		if(!(isset($risultato1))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
@@ -38,7 +38,7 @@
 		$co_ac = $scelta;
 		$_SESSION['ca']=$co_ac;
 		$risultato2= $dbConn->query("SELECT username, password, email FROM users WHERE id='$co_ac';");
-		if(!$risultato2){
+		if(!(isset($risultato2))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
@@ -52,7 +52,7 @@
 			} else {
 				$username1 = $_POST['username']; $password1 = $_POST['password']; $email1 = $_POST['email'];
 				$risultato3= $dbConn->query("UPDATE users SET username='$username1', password = '$password1', email = '$email1' WHERE id = '$ident';");
-				if(!$risultato3){
+				if(!(isset($risultato3))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}

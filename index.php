@@ -1,13 +1,13 @@
 <?php 
 	extract($_POST);
 	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!$dbConn) {
+	if(!(isset($dbConn))) {
 		echo 'Impossibile connettersi al database!';
 		break;
 	}
 	$output='';
 	$risultato= $dbConn->query("SELECT nome FROM elenco_musei;");
-	if(!$risultato){
+	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
 		break;
 	}
