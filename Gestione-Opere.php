@@ -1,24 +1,22 @@
 <?php
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
-	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!(isset($dbConn))) {
-		echo 'Impossibile connettersi al database!';
-		break;
-	}
-	$dbConn->set_charset('utf8');
+	$collegamento = 'mysql:host=localhost;dbname=my_onlinemuseum';
+	$dbConn = new PDO($collegamento , 'onlinemuseum', '');
+	$dbConn->exec('set names utf8');
 	$output1='';
 	$esitoOp = '';
 	session_start();
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
 	csrfProtector::init();
 	$cm = $_SESSION['cm'];
-	$risultato1= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione FROM elenco_opere WHERE codice_mus = '$cm';");
+	$risultato1= $dbConn->prepare("SELECT codice_opera, nome_opera, breve_descrizione FROM elenco_opere WHERE codice_mus = :cm;");
 	if(!(isset($risultato1))){
 		echo 'Impossibile eseguire la query!';
 		break;
 	}
-	while(($row1 = $risultato1->fetch_assoc()) != null){
+	$risultato1->execute(array(':cm' => $cm));
+	while($row1 = $risultato1->fetch(PDO::FETCH_ASSOC)){
 		$output1.='<tr>';
 		$output1.="<td> <input type=\"radio\" name=\"scelta1\" value=\"$row1[codice_opera]\"> </td>";
 		foreach ($row1 as $key1 => $value1) {
@@ -45,7 +43,6 @@
 		$_SESSION['co1']=$scelta1;
 		header('Location: Inserimento-Modifica-Opera.php');
 	}
-	$dbConn->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
