@@ -1,22 +1,26 @@
 <?php
 (include 'core.php');
 if(isset($_POST['register'])) {
+	define("MAX1",16);
+	define("MAX2",6);
+	define("MAX3",20);
+	define("MAX4",60);
 	$username = isset($_POST['username']) ? clear($_POST['username']) : false;
 	$password = isset($_POST['password']) ? clear($_POST['password']) : false;
 	$email = isset($_POST['email']) ? clear($_POST['email']) : false;
 	if(empty($username) || empty($password) || empty($email)) {
 		$stringa1 = 'Riempi tutti i campi.<br /><br /><a href="javascript:history.back();">Indietro</a>';
 		print($stringa1);
-	} elseif(strlen($username) > 16) {
+	} elseif(strlen($username) > MAX1) {
 		$stringa2 = 'Username troppo lungo. Massimo 16 caratteri.<br /><br /><a href="javascript:history.back();">Indietro</a>';
 		print($stringa2);
-	} elseif(strlen($password) < 6 || strlen($password) > 20) {
+	} elseif(strlen($password) < MAX2 || strlen($password) > MAX3) {
 		$stringa3 = 'Lunghezza della password non valida. Minimo 6 caratteri e massimo 20.<br /><br /><a href="javascript:history.back();">Indietro</a>';
 		print($stringa3);
 	} elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$stringa4 ='Indirizzo email non valido.';
 		print($stringa4);
-	} elseif(strlen($email) > 60) {
+	} elseif(strlen($email) > MAX4) {
 		$stringa5 = "Lunghezza dell' indirizzo email non valida. Massimo 60 caratteri.<br /><br /><a href='javascript:history.back();'>Indietro</a>";
 		print($stringa5);
 	} elseif(mysql_num_rows(mysql_query("SELECT * FROM users WHERE username LIKE '$username'")) > 0) {

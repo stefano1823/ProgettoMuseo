@@ -9,7 +9,7 @@
 	$dbConn->set_charset('utf8');
 	$output='';
 	session_start();
-	define("MAX",4);
+	define("MAX1",4);
 	$cm = $_SESSION['museo_scelto'];
 	$risultato2= $dbConn->query("SELECT codice_museo FROM elenco_musei WHERE nome = '$cm';");
 	$row = $risultato2->fetch_assoc();
@@ -25,9 +25,9 @@
 		$cont = 0;
 		foreach ($row as $key => $value) {
 			++$cont;
-			if ($cont < MAX) {
+			if ($cont < MAX1) {
 				$output.="<td class=\"dato\">$value</td>";
-			} elseif($cont == MAX) {
+			} elseif($cont == MAX1) {
 				$output.= "<td><img src=$value WIDTH=\"450\" HEIGHT=\"400\" alt=\"ERRORE\" /></td>";
 			}
 		}
@@ -111,7 +111,7 @@ input.bottone:hover {
 </head>
 
 <body>
-<h1><?php echo htmlspecialchars("$cm"); ?></h1>
+<h1><?php echo htmlspecialchars($cm); ?></h1>
 <p>Elenco Opere</p>
 <form action="FinestraUtente.php" method="post">
 <table width="1150">
@@ -124,7 +124,7 @@ input.bottone:hover {
 	</tr>
 	<tr>
 		<?php
-			print("$output");
+			print($output);
 		?>
 	</tr>
 </table>

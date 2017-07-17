@@ -25,6 +25,9 @@
 	
 	 
 	function doUpload($upload_dir) { 
+	define("MAX1",122);
+	define("MIN1",97);
+	define("MAX2",9);
     $nomefile = $_FILES['userimage']['tmp_name']; 
     $nomereale = $_FILES['userimage']['name']; 
     $nomereale = htmlentities(strtolower($nomereale)); 
@@ -35,16 +38,18 @@
         $filename = explode('.',$nomereale); 
         if (file_exists($upload_dir.'/'.$nomereale)) { 
             $filename[0] .= '.'; 
-            for ($a=0;$a<=9;$a++) 
-                $filename[0] .= chr(rand(97,122)); 
+            for ($a=0;$a<=MAX2;$a++) 
+                $filename[0] .= chr(rand(MIN1,MAX1)); 
             $newname = $filename[0] . '.' . $ext; 
         } 
-        $newname = str_replace(' ', '_', $newname); 
-        move_uploaded_file($nomefile,($upload_dir.'/'.$newname)); 
+        $newname = str_replace(' ', '_', $newname);  
 		$_SESSION['nome_img1'] = $newname;
     } else print $wrongUp; 
 } 
 	function doUpload1($upload_dir1) {  
+	define("MAX3",122);
+	define("MIN2",97);
+	define("MAX4",9);
     $nomefile = $_FILES['useraudio']['tmp_name']; 
     $nomereale = $_FILES['useraudio']['name']; 
     $nomereale = htmlentities(strtolower($nomereale)); 
@@ -55,12 +60,11 @@
         $filename = explode('.',$nomereale); 
         if (file_exists($upload_dir1.'/'.$nomereale)) { 
             $filename[0] .= '.'; 
-            for ($a=0;$a<=9;$a++) 
-                $filename[0] .= chr(rand(97,122)); 
+            for ($a=0;$a<=MAX4;$a++) 
+                $filename[0] .= chr(rand(MIN2,MAX3)); 
             $newname = $filename[0] . '.' . $ext; 
         } 
         $newname = str_replace(' ', '_', $newname); 
-        move_uploaded_file($nomefile,($upload_dir1.'/'.$newname)); 
 		$_SESSION['nome_aud'] = $newname;
     } else print $wrongUp; 
 }
