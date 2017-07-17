@@ -2,7 +2,11 @@
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
 	$collegamento = 'mysql:host=localhost;dbname=my_onlinemuseum';
-	$dbConn = new PDO($collegamento , 'onlinemuseum', '');
+	try {
+		$dbConn = new PDO($collegamento , 'onlinemuseum', '');
+	}catch(PDOException $e) {
+		echo 'Impossibile connettersi al database!';
+	}
 	$dbConn->exec('set names utf8');
 	$output1='';
 	$esitoOp = '';
@@ -31,11 +35,12 @@
 	}
 	elseif(isset($elimina_opera)) {
 		$codice_opera=$scelta1;
-		$risultato2= $dbConn->query("DELETE FROM elenco_opere WHERE codice_opera = '$codice_opera';");
+		$risultato2= $dbConn->prepare("DELETE FROM elenco_opere WHERE codice_opera = :codice_opera;");
 		if(!(isset($risultato2))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
+		$risultato2->execute(array(':codice_opera' => $codice_opera));
 		$esitoOp='<p>Opera eliminata</p>';
 		header('Location: Gestione-Opere.php');
 	} elseif(isset($modifica_opera)) {
