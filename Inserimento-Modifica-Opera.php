@@ -1,12 +1,13 @@
 <?php
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
-	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!(isset($dbConn))) {
+	$collegamento = 'mysql:host=localhost;dbname=my_onlinemuseum';
+	try {
+		$dbConn = new PDO($collegamento , 'onlinemuseum', '');
+	}catch(PDOException $e) {
 		echo 'Impossibile connettersi al database!';
-		break;
 	}
-	$dbConn->set_charset('utf8');
+	$dbConn->exec('set names utf8');
 	$flag='';
 	$controllocampi='';
 	$esito='';
@@ -74,15 +75,17 @@
 	$cm = $_SESSION['cm'];
 	if($_SESSION['azione']=='update'){
 		$co_op = $_SESSION['co1'];
-		$risultato1= $dbConn->query("SELECT * FROM elenco_opere WHERE codice_opera='$co_op';");
+		$risultato1= $dbConn->prepare("SELECT * FROM elenco_opere WHERE codice_opera= :co_op;");
 		if(!(isset($risultato1))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
-		$row = $risultato1->fetch_assoc();
-		$codice_opera = htmlspecialchars($row['codice_opera']); $nome_opera = htmlspecialchars($row['nome_opera']); $desc = htmlspecialchars($row['breve_descrizione']); 
-		$descrizione_opera = htmlspecialchars($row['descrizione']); $luogo = htmlspecialchars($row['luogo']); $nome_autore = htmlspecialchars($row['autore']); $per_sto = htmlspecialchars($row['periodo_storico']);
-		$tecnica = htmlspecialchars($row['tecnica']); $dimensione = htmlspecialchars($row['dimensioni']);$immagine = $row['immagine_opera']; $audio = $row['audio'];
+		$risultato1->execute(array(':co_op' => $co_op));
+		while($row = $risultato1->fetch(PDO::FETCH_ASSOC)){ 
+			$codice_opera = htmlspecialchars($row['codice_opera']); $nome_opera = htmlspecialchars($row['nome_opera']); $desc = htmlspecialchars($row['breve_descrizione']); 
+			$descrizione_opera = htmlspecialchars($row['descrizione']); $luogo = htmlspecialchars($row['luogo']); $nome_autore = htmlspecialchars($row['autore']); $per_sto = htmlspecialchars($row['periodo_storico']);
+			$tecnica = htmlspecialchars($row['tecnica']); $dimensione = htmlspecialchars($row['dimensioni']);$immagine = $row['immagine_opera']; $audio = $row['audio'];
+		}
 	}
 	if(isset($crea_opera)){
 		if(($codice_opera==null)||($nome_opera==null)||($desc==null)||($descrizione_opera==null)||($luogo==null)||($nome_autore==null)||($per_sto==null)||($tecnica==null)||($dimensione==null)){
@@ -115,37 +118,40 @@
 				} 				
 			} 
 			if($_SESSION['azione']=='insert1'&&$flag=='') {
-				$risultato= $dbConn->query("INSERT INTO elenco_opere(codice_opera,nome_opera,breve_descrizione,descrizione,luogo,autore,periodo_storico,tecnica,dimensioni,immagine_opera,audio,codice_mus)
-							VALUES('$codice_opera','$nome_opera','$desc','$descrizione_opera','$luogo','$nome_autore','$per_sto','$tecnica','$dimensione','$percorso_img','$percorso_aud','$cm');");
+				$risultato= $dbConn->prepare("INSERT INTO elenco_opere(codice_opera,nome_opera,breve_descrizione,descrizione,luogo,autore,periodo_storico,tecnica,dimensioni,immagine_opera,audio,codice_mus)
+							VALUES(:codice_opera,:nome_opera,:desc,:descrizione_opera,:luogo,:nome_autore,:per_sto,:tecnica,:dimensione,:percorso_img,:percorso_aud,:cm);");
 				if(!(isset($risultato))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
+				$risultato->execute(array(':codice_opera' => $codice_opera, ':nome_opera' => $nome_opera,':desc' => $desc,':descrizione_opera' => $descrizione_opera,':luogo' => $luogo,':nome_autore' => $nome_autore,':per_sto' => $per_sto,':tecnica' => $tecnica,':dimensione' => $dimensione,':percorso_img' => $percorso_img,':percorso_aud' => $percorso_aud,':cm' => $cm));
 				$esito='<p>Modifiche salvate</p>';
 			} elseif($_SESSION['azione']=='update') {
 				$codice_opera1 = $_POST['codice_opera']; $nome_opera1 = $_POST['nome_opera']; $descrizione1 = $_POST['desc']; $descrizione_opera1 = $_POST['descrizione_opera']; $luogo1 = $_POST['luogo'];
 				$nome_autore1 = $_POST['nome_autore']; $per_sto1 = $_POST['per_sto']; $tecnica1 = $_POST['tecnica']; $dimensione1 = $_POST['dimensione']; 
-				$risultato2= $dbConn->query("UPDATE elenco_opere SET codice_opera=$codice_opera1, nome_opera='$nome_opera1', breve_descrizione='$descrizione1', descrizione='$descrizione_opera1', luogo = '$luogo1', autore = '$nome_autore1', periodo_storico = '$per_sto1',tecnica='$tecnica1',dimensioni='$dimensione1', immagine_opera='$immagine', audio = '$audio' WHERE codice_opera = '$codice_opera';");
+				$risultato2= $dbConn->prepare("UPDATE elenco_opere SET codice_opera= :codice_opera1, nome_opera= :nome_opera1, breve_descrizione= :descrizione1, descrizione= :descrizione_opera1, luogo = :luogo1, autore = :nome_autore1, periodo_storico = :per_sto1,tecnica= :tecnica1,dimensioni= :dimensione1, immagine_opera= :immagine, audio = :audio WHERE codice_opera = :codice_opera;");
 				if(!(isset($risultato2))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
+				$risultato2->execute(array(':codice_opera1' => $codice_opera1, ':nome_opera1' => $nome_opera1,':descrizione1' => $descrizione1,':descrizione_opera1' => $descrizione_opera1,':luogo1' => $luogo1,':nome_autore1' => $nome_autore1,':per_sto1' => $per_sto1,':tecnica1' => $tecnica1,':dimensione1' => $dimensione1,':immagine' => $immagine,':audio' => $audio,':codice_opera' => $codice_opera));
 				$esito='<p>Modifiche salvate</p>';
 			}
-			$risultato1= $dbConn->query("SELECT * FROM elenco_opere WHERE codice_opera='$codice_opera';");
+			$risultato1= $dbConn->prepare("SELECT * FROM elenco_opere WHERE codice_opera= :codice_opera;");
 			if(!(isset($risultato1))){
 				echo 'Impossibile eseguire la query!';
 				break;
 			}
-			$row = $risultato1->fetch_assoc();
-			$codice_opera = htmlspecialchars($row['codice_opera']); $nome_opera = htmlspecialchars($row['nome_opera']); $desc = htmlspecialchars($row['breve_descrizione']); 
-			$descrizione_opera = htmlspecialchars($row['descrizione']); $luogo = htmlspecialchars($row['luogo']); $nome_autore = htmlspecialchars($row['autore']); $per_sto = htmlspecialchars($row['periodo_storico']);
-			$tecnica = htmlspecialchars($row['tecnica']); $dimensione = htmlspecialchars($row['dimensioni']);$immagine = $row['immagine_opera']; $audio = $row['audio'];
+			$risultato1->execute(array(':codice_opera' => $codice_opera));
+			while($row = $risultato1->fetch(PDO::FETCH_ASSOC)){ 
+				$codice_opera = htmlspecialchars($row['codice_opera']); $nome_opera = htmlspecialchars($row['nome_opera']); $desc = htmlspecialchars($row['breve_descrizione']); 
+				$descrizione_opera = htmlspecialchars($row['descrizione']); $luogo = htmlspecialchars($row['luogo']); $nome_autore = htmlspecialchars($row['autore']); $per_sto = htmlspecialchars($row['periodo_storico']);
+				$tecnica = htmlspecialchars($row['tecnica']); $dimensione = htmlspecialchars($row['dimensioni']);$immagine = $row['immagine_opera']; $audio = $row['audio'];
+			}
 		}
 	} elseif(isset($annulla)){
-		$codice_opera = '';$nome_opera='';$desc='';$descrizione_opera='';$luogo='';$nome_autore='';$per_sto='';$tecnica='';$dimensioni='';
+		$codice_opera = '';$nome_opera='';$desc='';$descrizione_opera='';$luogo='';$nome_autore='';$per_sto='';$tecnica='';$dimensione='';
 	} 
-	$dbConn->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

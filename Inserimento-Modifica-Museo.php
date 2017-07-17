@@ -1,16 +1,18 @@
 <?php
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
-	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!(isset($dbConn))){
+	$collegamento = 'mysql:host=localhost;dbname=my_onlinemuseum';
+	try {
+		$dbConn = new PDO($collegamento , 'onlinemuseum', '');
+	}catch(PDOException $e) {
 		echo 'Impossibile connettersi al database!';
-		break;
 	}
-	$dbConn->set_charset('utf8');
+	$dbConn->exec('set names utf8');
 	$flag='';
 	$controllocampi='';
 	$esito='';
 	session_start();
+	
 	//Impostazioni varie da modificare a piacimento 
 	$dimensione_max = '12600000';                         // Dimensione massima delle foto 
 	$upload_dir = './immagini';    // Cartella dove posizione le foto 
@@ -48,15 +50,17 @@ function doUpload($upload_dir) {
 }  
 	if($_SESSION['azione']=='update'){
 		$co_mu = $_SESSION['cm1'];
-		$risultato1= $dbConn->query("SELECT * FROM elenco_musei WHERE codice_museo='$co_mu';");
+		$risultato1= $dbConn->prepare("SELECT * FROM elenco_musei WHERE codice_museo= :co_mu;");
 		if(!(isset($risultato1))){
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
-		$row = $risultato1->fetch_assoc();
-		$codice_museo = htmlspecialchars($row['codice_museo']); $nome = htmlspecialchars($row['nome']); $citta = htmlspecialchars($row['citta']); 
-		$indirizzo = htmlspecialchars($row['indirizzo']); $orario_apertura = htmlspecialchars($row['orario_apertura']); $orario_chiusura = htmlspecialchars($row['orario_chiusura']); 
-		$descrizione = htmlspecialchars($row['descrizione']); $immagine = $row['immagine_museo'];
+		$risultato1->execute(array(':co_mu' => $co_mu));
+		while($row = $risultato1->fetch(PDO::FETCH_ASSOC)){ 
+			$codice_museo = htmlspecialchars($row['codice_museo']); $nome = htmlspecialchars($row['nome']); $citta = htmlspecialchars($row['citta']); 
+			$indirizzo = htmlspecialchars($row['indirizzo']); $orario_apertura = htmlspecialchars($row['orario_apertura']); $orario_chiusura = htmlspecialchars($row['orario_chiusura']); 
+			$descrizione = htmlspecialchars($row['descrizione']); $immagine = $row['immagine_museo'];
+		}
 	}
 	if(isset($crea_museo)){
 		if(($codice_museo==null)||($nome==null)||($citta==null)||($indirizzo==null)||($orario_apertura==null)||($orario_chiusura==null)||($descrizione==null)){
@@ -76,37 +80,40 @@ function doUpload($upload_dir) {
 				} 
 			} 
 			if($_SESSION['azione']=='insert'&&$flag=='') {
-				$risultato= $dbConn->query("INSERT INTO elenco_musei(codice_museo,nome,citta,indirizzo,orario_apertura,orario_chiusura,descrizione,immagine_museo)
-								VALUES('$codice_museo','$nome','$citta','$indirizzo','$orario_apertura','$orario_chiusura','$descrizione','$percorso_img');");
+				$risultato= $dbConn->prepare("INSERT INTO elenco_musei(codice_museo,nome,citta,indirizzo,orario_apertura,orario_chiusura,descrizione,immagine_museo)
+								VALUES(:codice_museo,:nome,:citta,:indirizzo,:orario_apertura,:orario_chiusura,:descrizione,:percorso_img);");
 				if(!(isset($risultato))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
+				$risultato->execute(array(':codice_museo' => $codice_museo, ':nome' => $nome,':citta' => $citta,':indirizzo' => $indirizzo,':orario_apertura' => $orario_apertura,':orario_chiusura' => $orario_chiusura,':descrizione' => $descrizione,':percorso_img' => $percorso_img));
 				$esito='<p>Modifiche salvate</p>';
 			} elseif($_SESSION['azione']=='update') {
 				$codice_museo1 = $_POST['codice_museo']; $nome1 = $_POST['nome']; $citta1 = $_POST['citta']; $indirizzo1 = $_POST['indirizzo']; $orario_apertura1 = $_POST['orario_apertura'];
 				$orario_chiusura1 = $_POST['orario_chiusura']; $descrizione1 = $_POST['descrizione'];
-				$risultato2= $dbConn->query("UPDATE elenco_musei SET codice_museo=$codice_museo1, nome='$nome1', citta = '$citta1', indirizzo = '$indirizzo1', orario_apertura = '$orario_apertura1', orario_chiusura = '$orario_chiusura1', descrizione = '$descrizione1', immagine_museo = '$immagine' WHERE codice_museo = '$codice_museo';");
+				$risultato2= $dbConn->prepare("UPDATE elenco_musei SET codice_museo= :codice_museo1, nome= :nome1, citta = :citta1, indirizzo = :indirizzo1, orario_apertura = :orario_apertura1, orario_chiusura = :orario_chiusura1, descrizione = :descrizione1, immagine_museo = :immagine WHERE codice_museo = :codice_museo;");
 				if(!(isset($risultato2))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
+				$risultato2->execute(array(':codice_museo1' => $codice_museo1, ':nome1' => $nome1,':citta1' => $citta1,':indirizzo1' => $indirizzo1,':orario_apertura1' => $orario_apertura1,':orario_chiusura1' => $orario_chiusura1,':descrizione1' => $descrizione1,':immagine' => $immagine, ':codice_museo' => $codice_museo));
 				$esito='<p>Modifiche salvate</p>';
 			}
-			$risultato1= $dbConn->query("SELECT * FROM elenco_musei WHERE codice_museo='$codice_museo';");
+			$risultato1= $dbConn->prepare("SELECT * FROM elenco_musei WHERE codice_museo= :codice_museo;");
 			if(!(isset($risultato1))){
 				echo 'Impossibile eseguire la query!';
 				break;
 			}
-			$row = $risultato1->fetch_assoc();
-			$codice_museo = htmlspecialchars($row['codice_museo']); $nome = htmlspecialchars($row['nome']); $citta = htmlspecialchars($row['citta']); 
-			$indirizzo = htmlspecialchars($row['indirizzo']); $orario_apertura = htmlspecialchars($row['orario_apertura']); $orario_chiusura = htmlspecialchars($row['orario_chiusura']); 
-			$descrizione = htmlspecialchars($row['descrizione']); $immagine = $row['immagine_museo'];
+			$risultato1->execute(array(':codice_museo' => $codice_museo));
+			while($row = $risultato1->fetch(PDO::FETCH_ASSOC)){ 
+				$codice_museo = htmlspecialchars($row['codice_museo']); $nome = htmlspecialchars($row['nome']); $citta = htmlspecialchars($row['citta']); 
+				$indirizzo = htmlspecialchars($row['indirizzo']); $orario_apertura = htmlspecialchars($row['orario_apertura']); $orario_chiusura = htmlspecialchars($row['orario_chiusura']); 
+				$descrizione = htmlspecialchars($row['descrizione']); $immagine = $row['immagine_museo'];
+			}
 		}  
 	} elseif(isset($annulla)){
-		$codice_museo = '';$nome='';$citta='';$indirizzo='';$oradio_apertura='';$oradio_chiusura='';$descrizione='';
+		$codice_museo = '';$nome='';$citta='';$indirizzo='';$orario_apertura='';$orario_chiusura='';$descrizione='';
 	} 
-	$dbConn->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
