@@ -13,7 +13,8 @@
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
 	csrfProtector::init();
 	$cm = $_SESSION['cm'];
-	$risultato1= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione FROM elenco_opere WHERE codice_mus = '$cm';");
+	$query1 = sprintf("SELECT codice_opera, nome_opera, breve_descrizione FROM elenco_opere WHERE codice_mus = '%s';", mysql_real_escape_string($cm));
+	$risultato1= $dbConn->query($query1);
 	if(!(isset($risultato1))){
 		echo 'Impossibile eseguire la query!';
 		break;
