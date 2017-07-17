@@ -161,8 +161,8 @@ input.bottone:hover {
 
 <body>
 <h1>GESTIONE MUSEO</h1>
-<?php print("$esito");?>
-<?php print("$controllocampi");?>
+<?php print((string)$esito);?>
+<?php print((string)$controllocampi);?>
 <form enctype="multipart/form-data" action="Inserimento-Modifica-Museo.php" method="post">
 <p>Codice Museo
   <input style="margin-left:3%" type="text" name="codice_museo" value="<?php

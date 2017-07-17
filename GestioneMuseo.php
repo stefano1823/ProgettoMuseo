@@ -110,7 +110,7 @@ input.bottone:hover {
 <body>
 <form action="GestioneMuseo.php" method="post">
 <h2> &nbsp; ELENCO MUSEI </h2>
-<?php print("$esitoOp"); ?>
+<?php print((string)$esitoOp); ?>
 <table class="contenitore_uno"><tr class="contenitore_uno"><td class="contenitore_uno">
 	<table>
 		<tr>

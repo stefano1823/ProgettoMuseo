@@ -10,4 +10,3 @@ mysql_query('CREATE TABLE IF NOT EXISTS users (id INT NOT NULL AUTO_INCREMENT PR
 function clear($var) {
 	return addslashes(htmlspecialchars(trim($var)));
 }
-?>

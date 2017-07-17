@@ -103,7 +103,7 @@ input.bottone:hover {
 <body>
 <form action="Gestione-Opere.php" method="post">
 <h2> &nbsp; ELENCO OPERE</h2>
-<?php print("$esitoOp"); ?>
+<?php print((string)$esitoOp); ?>
 <table class="contenitore_uno"><tr class="contenitore_uno"><td class="contenitore_uno">
 	<table>
 		<tr>

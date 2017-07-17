@@ -200,8 +200,8 @@ input.bottone:hover {
 
 <body>
 <h1>GESTIONE OPERA</h1>
-<?php print("$esito");?>
-<?php print("$controllocampi");?>
+<?php print((string)$esito);?>
+<?php print((string)$controllocampi);?>
 <form enctype="multipart/form-data" action="Inserimento-Modifica-Opera.php" method="post">
 <p>Codice Opera
   <input style="margin-left:7%" type="text" name="codice_opera" value="<?php

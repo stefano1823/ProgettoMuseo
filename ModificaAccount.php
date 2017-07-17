@@ -138,8 +138,8 @@ p.nome {
 <body>
 <form action="ModificaAccount.php" method="post">
 <h1>GESTIONE ACCOUNT</h1>
-<?php print("$esito"); ?>
-<?php print("$controllocampi");?>
+<?php print((string)$esito); ?>
+<?php print((string)$controllocampi);?>
 <table width="1000">
 	<tr>
 		<td width="10"></td>
