@@ -9,7 +9,7 @@
 	$dbConn->set_charset('utf8');
 	$output='';
 	session_start();
-	define("MAX1",4);
+	define('MAX1',4);
 	$cm = $_SESSION['museo_scelto'];
 	$risultato2= $dbConn->query("SELECT codice_museo FROM elenco_musei WHERE nome = '$cm';");
 	$row = $risultato2->fetch_assoc();

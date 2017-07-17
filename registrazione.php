@@ -1,10 +1,10 @@
 <?php
 (include 'core.php');
 if(isset($_POST['register'])) {
-	define("MAX1",16);
-	define("MAX2",6);
-	define("MAX3",20);
-	define("MAX4",60);
+	define('MAX1',16);
+	define('MAX2',6);
+	define('MAX3',20);
+	define('MAX4',60);
 	$username = isset($_POST['username']) ? clear($_POST['username']) : false;
 	$password = isset($_POST['password']) ? clear($_POST['password']) : false;
 	$email = isset($_POST['email']) ? clear($_POST['email']) : false;

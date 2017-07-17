@@ -23,9 +23,9 @@
 	//*************************************** 
 	 
 function doUpload($upload_dir) {
-	define("MAX1",122);
-	define("MIN1",97);
-	define("MAX2",9);
+	define('MAX1',122);
+	define('MIN1',97);
+	define('MAX2',9);
     $nomefile = $_FILES['userimage']['tmp_name']; 
     $nomereale = $_FILES['userimage']['name']; 
     $nomereale = htmlentities(strtolower($nomereale)); 
@@ -41,6 +41,7 @@ function doUpload($upload_dir) {
             $newname = $filename[0] . '.' . $ext; 
         } 
         $newname = str_replace(' ', '_', $newname); 
+        move_uploaded_file($nomefile,($upload_dir.'/'.$newname)); 
 		$_SESSION['nome_img'] = $newname;
     } else print $wrongUp; 
 }  

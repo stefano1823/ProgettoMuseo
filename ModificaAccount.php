@@ -58,7 +58,7 @@
 				}
 				$esito='<p>Modifiche salvate</p>';
 				$risultato2= $dbConn->query("SELECT username, password, email FROM users WHERE id='$ident';");
-				if(!$risultato2){
+				if(!(isset($risultato2))){
 					echo 'Impossibile eseguire la query!';
 					break;
 				}
