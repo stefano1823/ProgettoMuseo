@@ -21,7 +21,8 @@
 	$thatsAll = 'Foto caricata con successo!';            // Messaggio di OK per upload corretto 
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 
-	 
+	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
+	csrfProtector::init();
 function doUpload($upload_dir) {
 	define('MAX1',122);
 	define('MIN1',97);

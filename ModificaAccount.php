@@ -1,6 +1,4 @@
 <?php
-	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
-	csrfProtector::init();
 	extract($_POST);
 	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
 	if (!(isset($dbConn))) {
@@ -12,6 +10,8 @@
 	$esito = '';
 	$controllocampi='';
 	session_start();
+	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
+	csrfProtector::init();
 	$risultato= $dbConn->query("SELECT id, username, password, email FROM users WHERE tipo = '0';");
 	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';

@@ -10,7 +10,8 @@
 	$output='';
 	$esitoOp = '';
 	session_start();
-	
+	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
+	csrfProtector::init();
 	$risultato= $dbConn->query("SELECT codice_museo,nome,citta FROM elenco_musei;");
 	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';

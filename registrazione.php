@@ -1,5 +1,7 @@
 <?php
 (include 'core.php');
+include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
+csrfProtector::init();
 if(isset($_POST['register'])) {
 	define('MAX1',16);
 	define('MAX2',6);

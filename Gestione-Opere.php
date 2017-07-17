@@ -10,7 +10,8 @@
 	$output1='';
 	$esitoOp = '';
 	session_start();
-	
+	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
+	csrfProtector::init();
 	$cm = $_SESSION['cm'];
 	$risultato1= $dbConn->query("SELECT codice_opera, nome_opera, breve_descrizione FROM elenco_opere WHERE codice_mus = '$cm';");
 	if(!(isset($risultato1))){

@@ -2,6 +2,8 @@
 (include 'core.php');
 extract($_POST);
 session_start();
+include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
+csrfProtector::init();
 if(isset($_POST['login'])) {
 	$username = isset($_POST['username']) ? clear($_POST['username']) : false;
 	$password = isset($_POST['password']) ? clear($_POST['password']) : false;
