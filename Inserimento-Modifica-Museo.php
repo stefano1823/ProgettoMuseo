@@ -14,8 +14,9 @@
 	session_start();
 	
 	//Impostazioni varie da modificare a piacimento 
-	define('UPLOAD_DIR','./immagini');
+	define('UPLOAD_DIR','./immagini/');
 	define('MAX_UPLOAD_SIZE',12600000);
+	$estensioni = array ("png", "jpg", "gif");
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
@@ -38,23 +39,26 @@
 		if(($codice_museo==null)||($nome==null)||($citta==null)||($indirizzo==null)||($orario_apertura==null)||($orario_chiusura==null)||($descrizione==null)){
 			$controllocampi='<p>Compilare tutti i campi</p>';
 		}else{
-			$uploaded = $_FILES['userimage'];
-			$tmpFile = $uploaded['tmp_name'];
-			$targetFile = UPLOAD_DIR . $uploaded['name'];
+			$uploaded = $_FILES['userimage']['name']; 
+			$nomefile = $_FILES['userimage']['tmp_name'];
+			$uploaded = htmlentities(strtolower($uploaded));
+			$targetFile = UPLOAD_DIR . $_FILES['userimage']['name'];
 			$file = $_FILES['userimage']['name']; 
-			$uploadedSize = $uploaded['size'];
+			$uploadedSize = $_FILES['userimage']['size'];
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$contentType = finfo_file($finfo, $tmpFile);
-			if(in_array($contentType, $allowedTypes) && $uploadedSize < MAX_UPLOAD_SIZE) {
-				$imgInfo = getimagesize($tmpFile);
-				$contentType = $imgInfo['mime'];
-				if(move_uploaded_file($tmpFile, $targetFile)) {
-					$percorso_img = $targetFile;
-					$immagine = $targetFile;
-				} else {
-					print $wrongUp;
+			$contentType = finfo_file($finfo, $nomefile);
+			if(in_array(array_pop(explode('.',$file)),$estensioni)) { 
+				if($uploadedSize < MAX_UPLOAD_SIZE) {
+					$imgInfo = getimagesize($nomefile);
+					$contentType = $imgInfo['mime'];
+					if(move_uploaded_file($nomefile, $targetFile)) {
+						$percorso_img = $targetFile;
+						$immagine = $targetFile;
+					}
 				}
-			}
+			} else { 
+				print $wrongExt; 
+			} 
 			if($_SESSION['azione']=='insert'&&$flag=='') {
 				$risultato= $dbConn->prepare("INSERT INTO elenco_musei(codice_museo,nome,citta,indirizzo,orario_apertura,orario_chiusura,descrizione,immagine_museo)
 								VALUES(:codice_museo,:nome,:citta,:indirizzo,:orario_apertura,:orario_chiusura,:descrizione,:percorso_img);");
