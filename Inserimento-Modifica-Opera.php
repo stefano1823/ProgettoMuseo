@@ -12,66 +12,15 @@
 	$controllocampi='';
 	$esito='';
 	session_start();
-	$dimensione_max = '12600000';                         // Dimensione massima delle foto 
-	$upload_dir = './immagini';    							// Cartella dove posizione le foto 
-	$upload_dir1 = './audio'; 								// Cartella dove posizione l'audio
-	$estensioni = array ('png', 'jpg', 'gif'); 
-	$estensioni1 = array ('mp3','wav');	// Tipi di File consentiti 
-	$noSubmitSend = 'Nessun upload eseguito!';            // Messaggio di errore quando viene richiamato direttamente lo script PHP 
-	$wrongExt = 'Estensione file non valida!';            // Messaggio di errore per tipo di file non consentito 
-	$tooBig = 'Il file eccede la dimensione max!';        // Messaggio di errore per file troppo grande 
-	$thatsAll = 'Foto caricata con successo!';            // Messaggio di OK per upload corretto 
-	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
+	define('UPLOAD_DIR','./immagini');
+	define('UPLOAD_DIR1','./audio');
+	define('MAX_UPLOAD_SIZE',12600000);
+	$wrongUp = 'Something wrong here!';
 	//*************************************** 	
 	
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
 	csrfProtector::init();
-	function doUpload($upload_dir) { 
-	define('MAX1',122);
-	define('MIN1',97);
-	define('MAX2',9);
-    $nomefile = $_FILES['userimage']['tmp_name']; 
-    $nomereale = $_FILES['userimage']['name']; 
-    $nomereale = htmlentities(strtolower($nomereale)); 
-    if (is_uploaded_file($nomefile)) { 
-        $newname = ($nomereale); 
-         
-        $ext = end(explode('.',$nomereale)); 
-        $filename = explode('.',$nomereale); 
-        if (file_exists($upload_dir.'/'.$nomereale)) { 
-            $filename[0] .= '.'; 
-            for ($a=0;$a<=MAX2;$a++) 
-                $filename[0] .= chr(rand(MIN1,MAX1)); 
-            $newname = $filename[0] . '.' . $ext; 
-        } 
-        $newname = str_replace(' ', '_', $newname); 
-        move_uploaded_file($nomefile,($upload_dir.'/'.$newname)); 
-		$_SESSION['nome_img1'] = $newname;
-    } else print $wrongUp; 
-} 
-	function doUpload1($upload_dir1) {  
-	define('MAX3',122);
-	define('MIN2',97);
-	define('MAX4',9);
-    $nomefile = $_FILES['useraudio']['tmp_name']; 
-    $nomereale = $_FILES['useraudio']['name']; 
-    $nomereale = htmlentities(strtolower($nomereale)); 
-    if (is_uploaded_file($nomefile)) { 
-        $newname = ($nomereale); 
-         
-        $ext = end(explode('.',$nomereale)); 
-        $filename = explode('.',$nomereale); 
-        if (file_exists($upload_dir1.'/'.$nomereale)) { 
-            $filename[0] .= '.'; 
-            for ($a=0;$a<=MAX4;$a++) 
-                $filename[0] .= chr(rand(MIN2,MAX3)); 
-            $newname = $filename[0] . '.' . $ext; 
-        } 
-        $newname = str_replace(' ', '_', $newname); 
-        move_uploaded_file($nomefile,($upload_dir1.'/'.$newname)); 
-		$_SESSION['nome_aud'] = $newname;
-    } else print $wrongUp; 
-}
+	 
 	$cm = $_SESSION['cm'];
 	if($_SESSION['azione']=='update'){
 		$co_op = $_SESSION['co1'];
@@ -91,32 +40,40 @@
 		if(($codice_opera==null)||($nome_opera==null)||($desc==null)||($descrizione_opera==null)||($luogo==null)||($nome_autore==null)||($per_sto==null)||($tecnica==null)||($dimensione==null)){
 			$controllocampi='<p>Compilare tutti i campi</p>';
 		}else{
+			$uploaded = $_FILES['userimage'];
+			$tmpFile = $uploaded['tmp_name'];
+			$targetFile = UPLOAD_DIR . md5( uniqid() . $uploaded['name']);
 			$file = $_FILES['userimage']['name']; 
-			if(in_array(array_pop(explode('.',$file)),$estensioni)) { 
-			// Controllo la dimensione del file... 
-				$dimensione_file = $_FILES['userimage']['size']; 
-				if ($dimensione_file > $dimensione_max) { 
-					print $tooBig; 
-				} else { 
-					doUpload($upload_dir); 
-					$nome_immagine = $_SESSION['nome_img1'];
-					$percorso_img = 'immagini/'.$nome_immagine;
-					$immagine = 'immagini/'.$nome_immagine;
-				} 
-			} 
-			$file1 = $_FILES['useraudio']['name']; 
-			if(in_array(array_pop(explode('.',$file1)),$estensioni1)) { 
-				// Controllo la dimensione del file... 
-				$dimensione_file1 = $_FILES['useraudio']['size']; 
-				if ($dimensione_file1 > $dimensione_max) { 
-					print $tooBig; 
-				} else { 
-					doUpload1($upload_dir1); 
-					$nome_audio = $_SESSION['nome_aud'];
-					$percorso_aud = 'audio/'.$nome_audio;
-					$audio = 'audio/'.$nome_audio;
-				} 				
-			} 
+			$uploadedSize = $uploaded['size'];
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$contentType = finfo_file($finfo, $tmpFile);
+			if(in_array($contentType, $allowedTypes) && $uploadedSize < MAX_UPLOAD_SIZE) {
+				$imgInfo = getimagesize($tmpFile);
+				$contentType = $imgInfo['mime'];
+				if(move_uploaded_file($tmpFile, $targetFile)) {
+					$percorso_img = $targetFile;
+					$immagine = $targetFile;
+				} else {
+					print $wrongUp;
+				}
+			}
+			$uploaded1 = $_FILES['useraudio'];
+			$tmpFile1 = $uploaded1['tmp_name'];
+			$targetFile1 = UPLOAD_DIR1 . md5( uniqid() . $uploaded1['name']);
+			$file1 = $_FILES['userimage']['name']; 
+			$uploadedSize1 = $uploaded1['size'];
+			$finfo1 = finfo_open(FILEINFO_MIME_TYPE);
+			$contentType1 = finfo_file($finfo1, $tmpFile1);
+			if(in_array($contentType1, $allowedTypes1) && $uploadedSize1 < MAX_UPLOAD_SIZE) {
+				$imgInfo1 = getimagesize($tmpFile1);
+				$contentType1 = $imgInfo1['mime'];
+				if(move_uploaded_file($tmpFile1, $targetFile1)) {
+					$percorso_aud = $targetFile1;
+					$audio = $targetFile1;
+				} else {
+					print $wrongUp;
+				}
+			}
 			if($_SESSION['azione']=='insert1'&&$flag=='') {
 				$risultato= $dbConn->prepare("INSERT INTO elenco_opere(codice_opera,nome_opera,breve_descrizione,descrizione,luogo,autore,periodo_storico,tecnica,dimensioni,immagine_opera,audio,codice_mus)
 							VALUES(:codice_opera,:nome_opera,:desc,:descrizione_opera,:luogo,:nome_autore,:per_sto,:tecnica,:dimensione,:percorso_img,:percorso_aud,:cm);");
