@@ -14,16 +14,12 @@
 	session_start();
 	
 	//Impostazioni varie da modificare a piacimento 
-	$dimensione_max = '12600000';                         // Dimensione massima delle foto 
-	$upload_dir = './immagini';    // Cartella dove posizione le foto 
-	$estensioni = array ('png', 'jpg', 'gif');             // Tipi di File consentiti 
-	$noSubmitSend = 'Nessun upload eseguito!';            // Messaggio di errore quando viene richiamato direttamente lo script PHP 
-	$wrongExt = 'Estensione file non valida!';            // Messaggio di errore per tipo di file non consentito 
-	$tooBig = 'Il file eccede la dimensione max!';        // Messaggio di errore per file troppo grande 
-	$thatsAll = 'Foto caricata con successo!';            // Messaggio di OK per upload corretto 
+	define('UPLOAD_DIR','./immagini');
+	define('MAX_UPLOAD_SIZE',12600000);
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 
-	  
+	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
+	csrfProtector::init();
 	if($_SESSION['azione']=='update'){
 		$co_mu = $_SESSION['cm1'];
 		$risultato1= $dbConn->prepare("SELECT * FROM elenco_musei WHERE codice_museo= :co_mu;");
@@ -42,42 +38,23 @@
 		if(($codice_museo==null)||($nome==null)||($citta==null)||($indirizzo==null)||($orario_apertura==null)||($orario_chiusura==null)||($descrizione==null)){
 			$controllocampi='<p>Compilare tutti i campi</p>';
 		}else{
+			$uploaded = $_FILES['userimage'];
+			$tmpFile = $uploaded['tmp_name'];
+			$targetFile = UPLOAD_DIR . $uploaded['name'];
 			$file = $_FILES['userimage']['name']; 
-			if(in_array(array_pop(explode('.',$file)),$estensioni)) { 
-			// Controllo la dimensione del file... 
-				$dimensione_file = $_FILES['userimage']['size']; 
-				if ($dimensione_file > $dimensione_max) { 
-					print $tooBig; 
-				} else { 
-					define('MAX1',122);
-					define('MIN1',97);
-					define('MAX2',9);
-					$nomefile = $_FILES['userimage']['tmp_name']; 
-					$nomereale = $_FILES['userimage']['name']; 
-					$nomereale = htmlentities(strtolower($nomereale)); 
-					if (is_uploaded_file($nomefile)) { 
-						$newname = ($nomereale); 
-         
-						$ext = end(explode('.',$nomereale)); 
-						$filename = explode('.',$nomereale); 
-						if (file_exists($upload_dir.'/'.$nomereale)) { 
-							$filename[0] .= '.'; 
-							for ($a=0;$a<=MAX2;$a++) 
-								$filename[0] .= chr(rand(MIN1,MAX1)); 
-							$newname = $filename[0] . '.' . $ext; 
-						} 
-						$newname = str_replace(' ', '_', $newname); 
-						$percorso = $upload_dir.'/'.$newname;
-						if(move_uploaded_file($nomefile,$percorso)) {
-							$_SESSION['nome_img'] = $newname;
-						}
-					} else print $wrongUp; 
-					
-				} 
-				$nome_immagine = $_SESSION['nome_img'];
-				$percorso_img = 'immagini/'.$nome_immagine;
-				$immagine = 'immagini/'.$nome_immagine;
-			} 
+			$uploadedSize = $uploaded['size'];
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$contentType = finfo_file($finfo, $tmpFile);
+			if(in_array($contentType, $allowedTypes) && $uploadedSize < MAX_UPLOAD_SIZE) {
+				$imgInfo = getimagesize($tmpFile);
+				$contentType = $imgInfo['mime'];
+				if(move_uploaded_file($tmpFile, $targetFile)) {
+					$percorso_img = $targetFile;
+					$immagine = $targetFile;
+				} else {
+					print $wrongUp;
+				}
+			}
 			if($_SESSION['azione']=='insert'&&$flag=='') {
 				$risultato= $dbConn->prepare("INSERT INTO elenco_musei(codice_museo,nome,citta,indirizzo,orario_apertura,orario_chiusura,descrizione,immagine_museo)
 								VALUES(:codice_museo,:nome,:citta,:indirizzo,:orario_apertura,:orario_chiusura,:descrizione,:percorso_img);");
