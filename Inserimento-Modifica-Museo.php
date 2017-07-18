@@ -52,8 +52,8 @@
 					$imgInfo = getimagesize($nomefile);
 					$contentType = $imgInfo['mime'];
 					if(move_uploaded_file($nomefile, $targetFile)) {
-						$percorso_img = $targetFile;
-						$immagine = $targetFile;
+						$percorso_img = 'immagini/'.$uploaded;
+						$immagine = 'immagini/'.$uploaded;
 					}
 				}
 			} else { 

@@ -12,15 +12,15 @@
 	$controllocampi='';
 	$esito='';
 	session_start();
-	define('UPLOAD_DIR','./immagini');
-	define('UPLOAD_DIR1','./audio');
+	define('UPLOAD_DIR','./immagini/');
+	define('UPLOAD_DIR1','./audio/');
 	define('MAX_UPLOAD_SIZE',12600000);
-	$wrongUp = 'Something wrong here!';
+	$estensioni = array ("png", "jpg", "gif");
+	$estensioni1 = array ('mp3','wav');
+	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 	
-	
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
 	csrfProtector::init();
-	 
 	$cm = $_SESSION['cm'];
 	if($_SESSION['azione']=='update'){
 		$co_op = $_SESSION['co1'];
@@ -40,39 +40,44 @@
 		if(($codice_opera==null)||($nome_opera==null)||($desc==null)||($descrizione_opera==null)||($luogo==null)||($nome_autore==null)||($per_sto==null)||($tecnica==null)||($dimensione==null)){
 			$controllocampi='<p>Compilare tutti i campi</p>';
 		}else{
-			$uploaded = $_FILES['userimage'];
-			$tmpFile = $uploaded['tmp_name'];
-			$targetFile = UPLOAD_DIR . $uploaded['name'];
+			$uploaded = $_FILES['userimage']['name']; 
+			$nomefile = $_FILES['userimage']['tmp_name'];
+			$uploaded = htmlentities(strtolower($uploaded));
+			$targetFile = UPLOAD_DIR . $_FILES['userimage']['name'];
 			$file = $_FILES['userimage']['name']; 
-			$uploadedSize = $uploaded['size'];
+			$uploadedSize = $_FILES['userimage']['size'];
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$contentType = finfo_file($finfo, $tmpFile);
-			if(in_array($contentType, $allowedTypes) && $uploadedSize < MAX_UPLOAD_SIZE) {
-				$imgInfo = getimagesize($tmpFile);
-				$contentType = $imgInfo['mime'];
-				if(move_uploaded_file($tmpFile, $targetFile)) {
-					$percorso_img = $targetFile;
-					$immagine = $targetFile;
-				} else {
-					print $wrongUp;
+			$contentType = finfo_file($finfo, $nomefile);
+			if(in_array(array_pop(explode('.',$file)),$estensioni)) { 
+				if($uploadedSize < MAX_UPLOAD_SIZE) {
+					$imgInfo = getimagesize($nomefile);
+					$contentType = $imgInfo['mime'];
+					if(move_uploaded_file($nomefile, $targetFile)) {
+						$percorso_img = 'immagini/'.$uploaded;
+						$immagine = 'immagini/'.$uploaded;
+					}
 				}
-			}
-			$uploaded1 = $_FILES['useraudio'];
-			$tmpFile1 = $uploaded1['tmp_name'];
-			$targetFile1 = UPLOAD_DIR1 . $uploaded1['name'];
-			$file1 = $_FILES['userimage']['name']; 
-			$uploadedSize1 = $uploaded1['size'];
-			$finfo1 = finfo_open(FILEINFO_MIME_TYPE);
-			$contentType1 = finfo_file($finfo1, $tmpFile1);
-			if(in_array($contentType1, $allowedTypes1) && $uploadedSize1 < MAX_UPLOAD_SIZE) {
-				$imgInfo1 = getimagesize($tmpFile1);
-				$contentType1 = $imgInfo1['mime'];
-				if(move_uploaded_file($tmpFile1, $targetFile1)) {
-					$percorso_aud = $targetFile1;
-					$audio = $targetFile1;
-				} else {
-					print $wrongUp;
+			} else { 
+				print $wrongExt; 
+			} 
+			$uploaded1 = $_FILES['useraudio']['name']; 
+			$nomefile1 = $_FILES['useraudio']['tmp_name'];
+			$uploaded1 = htmlentities(strtolower($uploaded1));
+			$targetFile1 = UPLOAD_DIR1 . $_FILES['useraudio']['name'];
+			$file1 = $_FILES['useraudio']['name']; 
+			$uploadedSize1 = $_FILES['useraudio']['size'];
+			$contentType1 = finfo_file($finfo, $nomefile1);
+			if(in_array(array_pop(explode('.',$file1)),$estensioni1)) { 
+				if($uploadedSize1 < MAX_UPLOAD_SIZE) {
+					$imgInfo1 = getimagesize($nomefile1);
+					$contentType1 = $imgInfo1['mime'];
+					if(move_uploaded_file($nomefile1, $targetFile1)) {
+						$percorso_aud = "audio/".$uploaded1;
+						$audio = "audio/".$uploaded1;
+					}
 				}
+			} else { 
+				print $wrongExt; 
 			}
 			if($_SESSION['azione']=='insert1'&&$flag=='') {
 				$risultato= $dbConn->prepare("INSERT INTO elenco_opere(codice_opera,nome_opera,breve_descrizione,descrizione,luogo,autore,periodo_storico,tecnica,dimensioni,immagine_opera,audio,codice_mus)
