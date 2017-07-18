@@ -18,7 +18,8 @@
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 
 	
- 
+	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
+	csrfProtector::init();
 	if($_SESSION['azione']=='update'){
 		$co_mu = $_SESSION['cm1'];
 		$risultato1= $dbConn->prepare("SELECT * FROM elenco_musei WHERE codice_museo= :co_mu;");
@@ -39,7 +40,7 @@
 		}else{
 			$uploaded = $_FILES['userimage'];
 			$tmpFile = $uploaded['tmp_name'];
-			$targetFile = UPLOAD_DIR . md5( uniqid() . $uploaded['name']);
+			$targetFile = UPLOAD_DIR . $uploaded['name'];
 			$file = $_FILES['userimage']['name']; 
 			$uploadedSize = $uploaded['size'];
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);

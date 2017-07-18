@@ -42,7 +42,7 @@
 		}else{
 			$uploaded = $_FILES['userimage'];
 			$tmpFile = $uploaded['tmp_name'];
-			$targetFile = UPLOAD_DIR . md5( uniqid() . $uploaded['name']);
+			$targetFile = UPLOAD_DIR . $uploaded['name'];
 			$file = $_FILES['userimage']['name']; 
 			$uploadedSize = $uploaded['size'];
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -59,7 +59,7 @@
 			}
 			$uploaded1 = $_FILES['useraudio'];
 			$tmpFile1 = $uploaded1['tmp_name'];
-			$targetFile1 = UPLOAD_DIR1 . md5( uniqid() . $uploaded1['name']);
+			$targetFile1 = UPLOAD_DIR1 . $uploaded1['name'];
 			$file1 = $_FILES['userimage']['name']; 
 			$uploadedSize1 = $uploaded1['size'];
 			$finfo1 = finfo_open(FILEINFO_MIME_TYPE);
