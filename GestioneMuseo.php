@@ -1,23 +1,25 @@
 <?php
 	header( 'content-type: text/html; charset=utf-8' );
 	extract($_POST);
-	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if (!(isset($dbConn))) {
+	$collegamento = 'mysql:host=localhost;dbname=my_onlinemuseum';
+	try {
+		$dbConn = new PDO($collegamento , 'onlinemuseum', '');
+	}catch(PDOException $e) {
 		echo 'Impossibile connettersi al database!';
-		break;
 	}
-	$dbConn->set_charset('utf8');
+	$dbConn->exec('set names utf8');
 	$output='';
 	$esitoOp = '';
 	session_start();
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
 	csrfProtector::init();
-	$risultato= $dbConn->query("SELECT codice_museo,nome,citta FROM elenco_musei;");
+	$risultato= $dbConn->prepare("SELECT codice_museo,nome,citta FROM elenco_musei;");
 	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
 		break;
 	}
-	while(($row = $risultato->fetch_assoc()) != null){
+	$risultato->execute();
+	while($row = $risultato->fetch(PDO::FETCH_ASSOC)){
 		$output.='<tr>';
 		$output.="<td> <input type=\"radio\" name=\"scelta\" value=\"$row[codice_museo]\"> </td>";
 		foreach ($row as $key => $value) {
@@ -36,8 +38,8 @@
 	}
 	elseif(isset($elimina_museo)) {
 		$codice_museo=$scelta;
-		$risultato2= $dbConn->query("DELETE FROM elenco_opere WHERE codice_mus = '$codice_museo';");
-		$risultato3= $dbConn->query("DELETE FROM elenco_musei WHERE codice_museo = '$codice_museo';");
+		$risultato2= $dbConn->prepare("DELETE FROM elenco_opere WHERE codice_mus = :codice_museo;");
+		$risultato3= $dbConn->prepare("DELETE FROM elenco_musei WHERE codice_museo = :codice_museo;");
 		if(!(isset($risultato2))){
 			echo 'Impossibile eseguire la query!';
 			break;
@@ -46,6 +48,8 @@
 			echo 'Impossibile eseguire la query!';
 			break;
 		}
+		$risultato2->execute(array(':codice_museo' => $codice_museo));
+		$risultato3->execute(array(':codice_museo' => $codice_museo));
 		$esitoOp='<h6>Museo eliminato</h6>';
 		header('Location: GestioneMuseo.php');
 	} elseif(isset($modifica_museo)) {
@@ -53,7 +57,6 @@
 		$_SESSION['cm1']=$scelta;
 		header('Location: Inserimento-Modifica-Museo.php');
 	}
-	$dbConn->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

@@ -1,17 +1,19 @@
 <?php 
 	extract($_POST);
-	$dbConn = new mysqli('localhost', 'onlinemuseum', '','my_onlinemuseum');
-	if(!(isset($dbConn))) {
+	$collegamento = 'mysql:host=localhost;dbname=my_onlinemuseum';
+	try {
+		$dbConn = new PDO($collegamento , 'onlinemuseum', '');
+	}catch(PDOException $e) {
 		echo 'Impossibile connettersi al database!';
-		break;
 	}
 	$output='';
-	$risultato= $dbConn->query("SELECT nome FROM elenco_musei;");
+	$risultato= $dbConn->prepare("SELECT nome FROM elenco_musei;");
 	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
 		break;
 	}
-	while(($row = $risultato->fetch_assoc()) != null){
+	$risultato->execute();
+	while($row = $risultato->fetch(PDO::FETCH_ASSOC)){ 
 		foreach ($row as $key => $value) {
 			$output.="<option value=\"$value\"> $value </option>";
 		}
