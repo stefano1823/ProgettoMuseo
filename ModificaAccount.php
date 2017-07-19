@@ -11,7 +11,8 @@
 	$esito = '';
 	$controllocampi='';
 	session_start();
-	
+	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
+	csrfProtector::init();
 	$risultato = $dbConn->prepare("SELECT id, username, password, email FROM users WHERE tipo = ?;");
 	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
