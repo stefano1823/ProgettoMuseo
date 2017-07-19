@@ -17,12 +17,10 @@ if(isset($_POST['login'])) {
 				$stringa3 ='Password non trovata.<br /><br /><a href="javascript:history.back();">Indietro</a>';
 				print($stringa3);
 	} else {
-		$ip = $_SERVER['REMOTE_ADDR'];
 		if(mysql_num_rows(mysql_query("SELECT * FROM users WHERE username LIKE '$username' AND password='$password'")) > 0) {
 			$username = mysql_result(mysql_query("SELECT username FROM users WHERE username LIKE '$username'"), 0);
 			$userid = mysql_result(mysql_query("SELECT id FROM users WHERE username LIKE '$username'"), 0);
 			$tipo = mysql_result(mysql_query("SELECT tipo FROM users WHERE username LIKE '$username'"), 0);
-			mysql_query("UPDATE users SET last_login='".time()."', last_ip='$ip' WHERE id='$userid'");
 			if ($tipo==0){
 				header('Location: GestioneMuseo.php');
 			} elseif($tipo == 1) {

@@ -11,8 +11,8 @@
 	$esito = '';
 	$controllocampi='';
 	session_start();
+	session_start();
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
-	csrfProtector::init();
 	$risultato = $dbConn->prepare("SELECT id, username, password, email FROM users WHERE tipo = ?;");
 	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
@@ -31,7 +31,7 @@
 		$codice_account=$scelta;
 		$risultato1= $dbConn->prepare("DELETE FROM users WHERE id = :codice_account;");
 		if(!(isset($risultato1))){
-			echo 'Impossibile eseguire la query!';
+			echo 'Impossibile eseguire l eliminazione!';
 			break;
 		}
 		$risultato1->execute(array(':codice_account' => $codice_account));
@@ -61,7 +61,7 @@
 				$username1 = $_POST['username']; $password1 = $_POST['password']; $email1 = $_POST['email'];
 				$risultato3 = $dbConn->prepare("UPDATE users SET username= :username1, password = :password1, email = :email1 WHERE id = :ident;");
 				if(!(isset($risultato3))){
-					echo 'Impossibile eseguire la query!';
+					echo 'Impossibile eseguire la modifica!';
 					break;
 				}
 				$risultato3->execute(array(':username1' => $username1,':password1' => $password1,':email1' => $email1,':ident' => $ident));

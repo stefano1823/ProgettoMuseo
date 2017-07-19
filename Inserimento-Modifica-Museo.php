@@ -12,15 +12,15 @@
 	$controllocampi='';
 	$esito='';
 	session_start();
-	
+	session_start();
+	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
 	//Impostazioni varie da modificare a piacimento 
 	define('UPLOAD_DIR','./immagini/');
 	define('MAX_UPLOAD_SIZE',12600000);
 	$estensioni = array ("png", "jpg", "gif");
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 
-	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
-	csrfProtector::init();
+	
 	if($_SESSION['azione']=='update'){
 		$co_mu = $_SESSION['cm1'];
 		$risultato1= $dbConn->prepare("SELECT * FROM elenco_musei WHERE codice_museo= :co_mu;");
@@ -63,7 +63,7 @@
 				$risultato= $dbConn->prepare("INSERT INTO elenco_musei(codice_museo,nome,citta,indirizzo,orario_apertura,orario_chiusura,descrizione,immagine_museo)
 								VALUES(:codice_museo,:nome,:citta,:indirizzo,:orario_apertura,:orario_chiusura,:descrizione,:percorso_img);");
 				if(!(isset($risultato))){
-					echo 'Impossibile eseguire la query!';
+					echo 'Impossibile eseguire l inserimento!';
 					break;
 				}
 				$risultato->execute(array(':codice_museo' => $codice_museo, ':nome' => $nome,':citta' => $citta,':indirizzo' => $indirizzo,':orario_apertura' => $orario_apertura,':orario_chiusura' => $orario_chiusura,':descrizione' => $descrizione,':percorso_img' => $percorso_img));
@@ -73,7 +73,7 @@
 				$orario_chiusura1 = $_POST['orario_chiusura']; $descrizione1 = $_POST['descrizione'];
 				$risultato2= $dbConn->prepare("UPDATE elenco_musei SET codice_museo= :codice_museo1, nome= :nome1, citta = :citta1, indirizzo = :indirizzo1, orario_apertura = :orario_apertura1, orario_chiusura = :orario_chiusura1, descrizione = :descrizione1, immagine_museo = :immagine WHERE codice_museo = :codice_museo;");
 				if(!(isset($risultato2))){
-					echo 'Impossibile eseguire la query!';
+					echo 'Impossibile eseguire la modifica!';
 					break;
 				}
 				$risultato2->execute(array(':codice_museo1' => $codice_museo1, ':nome1' => $nome1,':citta1' => $citta1,':indirizzo1' => $indirizzo1,':orario_apertura1' => $orario_apertura1,':orario_chiusura1' => $orario_chiusura1,':descrizione1' => $descrizione1,':immagine' => $immagine, ':codice_museo' => $codice_museo));

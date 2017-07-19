@@ -32,8 +32,7 @@ if(isset($_POST['register'])) {
 		$stringa7 = 'Indirizzo email già in uso. Sei pregato di sceglierne un altro.<br /><br /><a href="javascript:history.back();">Indietro</a>';
 		print($stringa7);
 	} else {
-		$ip = $_SERVER['REMOTE_ADDR'];
-		if(mysql_query("INSERT INTO users (username, password, email, reg_ip, last_ip, reg_date) VALUES ('$username','$password','$email','$ip','$ip',UNIX_TIMESTAMP())")) {
+		if(mysql_query("INSERT INTO users (username, password, email) VALUES ('$username','$password','$email')")) {
 			$stringa8 = 'Registrazione andata a buon fine.<br /><br /><a href="javascript:window.history.go(-2);">Indietro</a>';
 			print($stringa8);
 		} else {

@@ -11,8 +11,8 @@
 	$output1='';
 	$esitoOp = '';
 	session_start();
+	session_start();
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
-	csrfProtector::init();
 	$cm = $_SESSION['cm'];
 	$risultato1= $dbConn->prepare("SELECT codice_opera, nome_opera, breve_descrizione FROM elenco_opere WHERE codice_mus = :cm;");
 	if(!(isset($risultato1))){
@@ -37,7 +37,7 @@
 		$codice_opera=$scelta1;
 		$risultato2= $dbConn->prepare("DELETE FROM elenco_opere WHERE codice_opera = :codice_opera;");
 		if(!(isset($risultato2))){
-			echo 'Impossibile eseguire la query!';
+			echo 'Impossibile eseguire l eliminazione!';
 			break;
 		}
 		$risultato2->execute(array(':codice_opera' => $codice_opera));

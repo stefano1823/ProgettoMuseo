@@ -12,6 +12,8 @@
 	$controllocampi='';
 	$esito='';
 	session_start();
+	session_start();
+	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
 	define('UPLOAD_DIR','./immagini/');
 	define('UPLOAD_DIR1','./audio/');
 	define('MAX_UPLOAD_SIZE',12600000);
@@ -19,8 +21,7 @@
 	$estensioni1 = array ('mp3','wav');
 	$wrongUp = 'Something wrong here!';                    // Messaggio di errore quando lo script non riesce ad eseguire l'upload 
 	//*************************************** 	
-	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
-	csrfProtector::init();
+	
 	$cm = $_SESSION['cm'];
 	if($_SESSION['azione']=='update'){
 		$co_op = $_SESSION['co1'];
@@ -83,7 +84,7 @@
 				$risultato= $dbConn->prepare("INSERT INTO elenco_opere(codice_opera,nome_opera,breve_descrizione,descrizione,luogo,autore,periodo_storico,tecnica,dimensioni,immagine_opera,audio,codice_mus)
 							VALUES(:codice_opera,:nome_opera,:desc,:descrizione_opera,:luogo,:nome_autore,:per_sto,:tecnica,:dimensione,:percorso_img,:percorso_aud,:cm);");
 				if(!(isset($risultato))){
-					echo 'Impossibile eseguire la query!';
+					echo 'Impossibile eseguire l inserimento!';
 					break;
 				}
 				$risultato->execute(array(':codice_opera' => $codice_opera, ':nome_opera' => $nome_opera,':desc' => $desc,':descrizione_opera' => $descrizione_opera,':luogo' => $luogo,':nome_autore' => $nome_autore,':per_sto' => $per_sto,':tecnica' => $tecnica,':dimensione' => $dimensione,':percorso_img' => $percorso_img,':percorso_aud' => $percorso_aud,':cm' => $cm));
@@ -93,7 +94,7 @@
 				$nome_autore1 = $_POST['nome_autore']; $per_sto1 = $_POST['per_sto']; $tecnica1 = $_POST['tecnica']; $dimensione1 = $_POST['dimensione']; 
 				$risultato2= $dbConn->prepare("UPDATE elenco_opere SET codice_opera= :codice_opera1, nome_opera= :nome_opera1, breve_descrizione= :descrizione1, descrizione= :descrizione_opera1, luogo = :luogo1, autore = :nome_autore1, periodo_storico = :per_sto1,tecnica= :tecnica1,dimensioni= :dimensione1, immagine_opera= :immagine, audio = :audio WHERE codice_opera = :codice_opera;");
 				if(!(isset($risultato2))){
-					echo 'Impossibile eseguire la query!';
+					echo 'Impossibile eseguire la modifica!';
 					break;
 				}
 				$risultato2->execute(array(':codice_opera1' => $codice_opera1, ':nome_opera1' => $nome_opera1,':descrizione1' => $descrizione1,':descrizione_opera1' => $descrizione_opera1,':luogo1' => $luogo1,':nome_autore1' => $nome_autore1,':per_sto1' => $per_sto1,':tecnica1' => $tecnica1,':dimensione1' => $dimensione1,':immagine' => $immagine,':audio' => $audio,':codice_opera' => $codice_opera));

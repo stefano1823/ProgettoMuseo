@@ -11,8 +11,8 @@
 	$output='';
 	$esitoOp = '';
 	session_start();
+	session_start();
 	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
-	csrfProtector::init();
 	$risultato= $dbConn->prepare("SELECT codice_museo,nome,citta FROM elenco_musei;");
 	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
@@ -41,11 +41,11 @@
 		$risultato2= $dbConn->prepare("DELETE FROM elenco_opere WHERE codice_mus = :codice_museo;");
 		$risultato3= $dbConn->prepare("DELETE FROM elenco_musei WHERE codice_museo = :codice_museo;");
 		if(!(isset($risultato2))){
-			echo 'Impossibile eseguire la query!';
+			echo 'Impossibile eseguire l eliminazione!';
 			break;
 		}
 		if(!(isset($risultato3))){
-			echo 'Impossibile eseguire la query!';
+			echo 'Impossibile eseguire l eliminazione!';
 			break;
 		}
 		$risultato2->execute(array(':codice_museo' => $codice_museo));
