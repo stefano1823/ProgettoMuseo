@@ -11,8 +11,7 @@
 	$esito = '';
 	$controllocampi='';
 	session_start();
-	include_once __DIR__ . '/libs/csrf/csrfprotector.php'; 
-	csrfProtector::init();
+	
 	$risultato = $dbConn->prepare("SELECT id, username, password, email FROM users WHERE tipo = ?;");
 	if(!(isset($risultato))){
 		echo 'Impossibile eseguire la query!';
@@ -77,6 +76,7 @@
 					$password = htmlspecialchars($row1['password']); 
 					$email = htmlspecialchars($row1['email']);
 				}
+				header('Location: ModificaAccount.php');
 			}
 	}elseif(isset($annulla)){
 		$username = '';$password='';$email='';
