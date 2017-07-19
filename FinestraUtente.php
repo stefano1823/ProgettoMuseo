@@ -42,7 +42,8 @@
 			header('Location: FinestraUtente1.php');
 		} else {
 			$messaggio = 'Selezionare un opera!';
-			echo "<script type='text/javascript'>alert('$messaggio');</script>";
+			$tag = "<script type='text/javascript'>alert('$messaggio');</script>";
+			echo $tag;
 		}
 	}
 ?>
