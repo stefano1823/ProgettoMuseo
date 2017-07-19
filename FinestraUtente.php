@@ -36,9 +36,14 @@
 		$output.='</tr>';
 	}
 	if(isset($vai_alla_scheda)) {
-		$_SESSION['azione']='invio';
-		$_SESSION['co']=$scelta;
-		header('Location: FinestraUtente1.php');
+		if(isset($_POST['scelta'])) {
+			$_SESSION['azione']='invio';
+			$_SESSION['co']=$scelta;
+			header('Location: FinestraUtente1.php');
+		} else {
+			$messaggio = 'Selezionare un opera!';
+			echo "<script type='text/javascript'>alert('$messaggio');</script>";
+		}
 	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
